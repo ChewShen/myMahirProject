@@ -4,7 +4,7 @@ Repository for **myMahir Full Stack Developer Track (Cohort 2)** capstone projec
 
 This project is a web-based learning platform that combines automated, AI-driven evaluations with dynamic content delivery to expedite the learning process.
 
-This approach uses automated create tests rather than having teachers create them by hand. After a student completes a module, the Express.js backend securely connects to an external AI API to quickly create multiple-choice, contextual quizzes based on the precise content they just read.
+This approach uses automatically generated tests rather than having teachers create them by hand. After a student completes a module, the Express.js backend securely connects to an external AI API to quickly create multiple-choice, contextual quizzes based on the precise content they just read.
 
 ### Tech Stack
 
@@ -49,7 +49,7 @@ This application is built on a standard 3-Tier Architecture, separating the user
 
 **Data Layer (MySQL):** The persistent storage system holding relational data for Users, Courses, and Quiz Results.
 
-### Core quiz Pipeline
+### Core Quiz Pipeline
 
 ![Pipeline Diagram](./docs/pipeline.png)
 
