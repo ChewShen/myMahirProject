@@ -1,45 +1,57 @@
 const express = require('express');
-const path = require('path');
+const cors = require('cors');
+const mysql = require('mysql2/promise'); // Using promise wrapper for modern async/await
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.engine( 'ejs', require( 'ejs' ).__express);
-app.set( 'view engine', 'ejs' );
+// Middleware
+app.use(cors()); // Crucial: Allows Angular to talk to Express
+app.use(express.json()); // Allows Express to read JSON bodies
 
-app.set( 'views', path.join( __dirname, 'views' ));
-
-
-app.use( express.static( 'public' ));
-
-app.get('/', (req, res) => {
-  res.send('Hello Express!');
+// Database Connection Pool (from Slide 43)
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD ,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-app.get( '/about', (req, res) => {
-  res.send( 'About Us Page!' );
+// Test Route: Phase 2 Milestone (GET /api/courses)
+app.get('/api/users', async (req, res) => {
+    try {
+        // Query the database for the dummy course you inserted
+        const [rows] = await db.query('SELECT * FROM users');
+        
+        res.status(200).json({
+            success: true,
+            data: rows
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Database connection failed" });
+    }
 });
 
-// POST request
-app.post( '/user', (req, res) => {
-  const name = req.query.name;
-  res.status( 201 ).send( `Hello ${ name }` );
+app.get('/api/courses', async (req, res) => {
+    try {
+        // Query the database for the dummy course you inserted
+        const [rows] = await db.query('SELECT * FROM courses');
+        
+        res.status(200).json({
+            success: true,
+            data: rows
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Database connection failed" });
+    }
 });
-
-app.put( '/update', (req, res) => {
-  const email = req.query.email;
-  res.send( `The email has been updated to ${ email }` );
+// Start Server
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-
-
-// DELETE request
-app.delete( '/item/:id', (req, res) => {
-  const id = req.params.id;
-  res.send( `The item with id ${ id } has been successfully deleted.` );
-});
-
-
-const blogRoutes = require( './routes/blog/blog_routes.js' );
-app.use( '/blogs', blogRoutes );
-
-
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -1,0 +1,12 @@
+@if (courseData) {
+  <div style="padding: 20px;">
+    <h2>{{ courseData.courseName }}</h2>
+    <p>{{ courseData.courseStatus }}</p>
+    
+    <button style="margin-top: 15px;">Test My Knowledge (Generate Quiz)</button>
+  </div>
+} @else {
+  <div>
+    <p>Loading course from database...</p>
+  </div>
+}
