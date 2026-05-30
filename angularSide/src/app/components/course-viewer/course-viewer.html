@@ -1,12 +1,30 @@
 @if (courseData) {
-  <div style="padding: 20px;">
-    <h2>{{ courseData.courseName }}</h2>
-    <p>{{ courseData.courseStatus }}</p>
+  <div style="padding: 40px; display: flex; justify-content: center;">
     
-    <button style="margin-top: 15px;">Test My Knowledge (Generate Quiz)</button>
+    <mat-card style="max-width: 600px; width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      
+      <mat-card-header>
+        <mat-card-title style="font-size: 24px; margin-bottom: 5px;">
+          {{ courseData.courseName }}
+        </mat-card-title>
+        <mat-card-subtitle>Status: {{ courseData.courseStatus }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content style="margin-top: 20px;">
+        <p style="font-size: 16px; line-height: 1.6;">
+          This is where your long course content paragraph will go. Once a student finishes reading this, they will click the button below to prove they understand it!
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions style="padding: 16px;">
+        <button mat-raised-button color="primary">Test My Knowledge (Generate Quiz)</button>
+      </mat-card-actions>
+
+    </mat-card>
+
   </div>
 } @else {
-  <div>
-    <p>Loading course from database...</p>
+  <div style="padding: 40px; text-align: center;">
+    <h3>Loading course from database...</h3>
   </div>
 }

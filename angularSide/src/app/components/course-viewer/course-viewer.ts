@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Api } from '../../services/api';
 import { ChangeDetectorRef } from '@angular/core';
+import { SharedModule } from '../../shared/shared-module';
 @Component({
   selector: 'app-course-viewer',
-  imports: [],
+  imports: [...SharedModule],
   templateUrl: './course-viewer.html',
   styleUrl: './course-viewer.css',
 })
