@@ -1,30 +1,36 @@
 @if (courseData) {
-  <div style="padding: 40px; display: flex; justify-content: center;">
+  <div class="bg-background min-h-[80vh] flex items-center justify-center p-margin-mobile md:p-margin-desktop font-body-md text-body-md antialiased">
     
-    <mat-card style="max-width: 600px; width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <main class="bg-surface-container-lowest w-full max-w-sm rounded-lg shadow-sm hover:shadow-[0px_10px_15px_rgba(0,0,0,0.05)] transition-shadow duration-300 border border-outline-variant/30 flex flex-col p-md gap-gutter">
       
-      <mat-card-header>
-        <mat-card-title style="font-size: 24px; margin-bottom: 5px;">
-          {{ courseData.courseName }}
-        </mat-card-title>
-        <mat-card-subtitle>Status: {{ courseData.courseStatus }}</mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content style="margin-top: 20px;">
-        <p style="font-size: 16px; line-height: 1.6;">
+      <header class="flex flex-col gap-base">
+        <h1 class="font-headline-md text-headline-md text-on-surface">{{ courseData.courseName }}</h1>
+        
+        <div class="self-start">
+          <span class="inline-flex items-center gap-xs bg-surface-container-high text-primary font-label-sm text-label-sm px-3 py-1 rounded-full">
+            <span class="material-symbols-outlined" style="font-size: 14px;">donut_large</span>
+            {{ courseData.courseStatus }}
+          </span>
+        </div>
+      </header>
+      
+      <section>
+        <p class="font-body-md text-body-md text-on-surface-variant">
           This is where your long course content paragraph will go. Once a student finishes reading this, they will click the button below to prove they understand it!
         </p>
-      </mat-card-content>
-
-      <mat-card-actions style="padding: 16px;">
-        <button mat-raised-button color="primary">Test My Knowledge (Generate Quiz)</button>
-      </mat-card-actions>
-
-    </mat-card>
+      </section>
+      
+      <footer class="mt-base">
+        <button class="w-full bg-secondary hover:bg-primary active:scale-[0.98] transition-all duration-200 text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center gap-base group">
+          Test My Knowledge
+          <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+        </button>
+      </footer>
+    </main>
 
   </div>
 } @else {
-  <div style="padding: 40px; text-align: center;">
-    <h3>Loading course from database...</h3>
+  <div class="flex items-center justify-center min-h-[80vh] text-on-surface">
+    <h3 class="text-xl font-semibold">Loading course from database...</h3>
   </div>
 }

@@ -1,4 +1,4 @@
-# 🎓 AI-Powered E-Learning & Assessment Portal
+# 🎓 E-Learning & Assessment Platform
 
 Repository for **myMahir Full Stack Developer Track (Cohort 2)** capstone project.
 

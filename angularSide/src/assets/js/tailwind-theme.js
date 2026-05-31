@@ -1,21 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>MyMahir E-Learning</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  
-  <script>
-    window.tailwind = window.tailwind || {};
-    window.tailwind.config = {
-      darkMode: "class",
-      theme: {
-                extend: {
+window.tailwind = window.tailwind || {};
+window.tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
             "colors": {
                 "surface-container-high": "#dce9ff",
                 "surface-tint": "#4059aa",
@@ -108,15 +95,5 @@
                 "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
             }
         }
-      }
-    };
-  </script>
-
-  <style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-  </style>
-</head>
-<body>
-  <app-root></app-root>
-</body>
-</html>
+    }
+};
