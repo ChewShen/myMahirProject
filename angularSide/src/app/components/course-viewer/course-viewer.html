@@ -21,9 +21,16 @@
       </section>
       
       <footer class="mt-base">
-        <button class="w-full bg-secondary hover:bg-primary active:scale-[0.98] transition-all duration-200 text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center gap-base group">
-          Test My Knowledge
-          <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+        <button (click)="onGenerateQuiz()" [disabled]="isGenerating" class="w-full bg-secondary hover:bg-primary active:scale-[0.98] transition-all duration-200 text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center gap-base group disabled:opacity-50 disabled:cursor-not-allowed">
+          
+          @if(isGenerating) {
+            Generating questions...
+            <span class="material-symbols-outlined animate-spin">autorenew</span>
+          } @else {
+            Test My Knowledge
+            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+          }
+          
         </button>
       </footer>
     </main>
@@ -32,5 +39,76 @@
 } @else {
   <div class="flex items-center justify-center min-h-[80vh] text-on-surface">
     <h3 class="text-xl font-semibold">Loading course from database...</h3>
+  </div>
+}
+
+
+@if (generatedQuiz.length > 0) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/60 backdrop-blur-sm p-4 md:p-8">
+    
+    <div class="bg-surface-container-lowest w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl p-6 md:p-8 flex flex-col gap-8">
+      
+      <header class="flex justify-between items-center border-b border-outline-variant/30 pb-4">
+        <h2 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">psychology</span>
+          AI Knowledge Check
+        </h2>
+        <button (click)="closeQuiz()" class="text-on-surface-variant hover:text-error transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+
+      @if (score === null) {
+        <div class="flex flex-col gap-8">
+          
+          @for (q of generatedQuiz; track $index; let qIndex = $index) {
+            <div class="bg-surface/50 p-6 rounded-lg border border-outline-variant/20">
+              <h3 class="font-headline-sm text-headline-sm text-on-surface mb-4">
+                {{ qIndex + 1 }}. {{ q.question }}
+              </h3>
+              
+              <div class="flex flex-col gap-3">
+                @for (opt of q.options; track opt) {
+                  
+                  <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:bg-surface-container-high"
+                         [class.border-primary]="selectedAnswers[qIndex] === opt"
+                         [class.bg-surface-container]="selectedAnswers[qIndex] === opt"
+                         [class.border-outline-variant]="selectedAnswers[qIndex] !== opt">
+                    
+                    <input type="radio" 
+                           [name]="'question_' + qIndex" 
+                           [value]="opt" 
+                           (change)="selectOption(qIndex, opt)"
+                           class="text-primary focus:ring-primary h-5 w-5">
+                    <span class="font-body-md text-body-md text-on-surface-variant">{{ opt }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+          }
+          
+          <button (click)="submitQuiz()" 
+                  [disabled]="selectedAnswers.length < 5"
+                  class="w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4">
+            Submit Answers
+          </button>
+        </div>
+
+      } @else {
+        <div class="flex flex-col items-center justify-center py-12 gap-4 text-center">
+          <span class="material-symbols-outlined text-6xl text-on-tertiary-container mb-2">emoji_events</span>
+          <h2 class="font-display-lg text-display-lg text-primary">
+            {{ score }} / {{ generatedQuiz.length }}
+          </h2>
+          <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+            Excellent work! Your AI-generated assessment is complete. Your progress can now be saved to your dashboard.
+          </p>
+          <button (click)="closeQuiz()" class="mt-8 bg-secondary hover:bg-primary text-on-primary px-8 py-3 rounded-lg font-label-md transition-colors">
+            Return to Course
+          </button>
+        </div>
+      }
+
+    </div>
   </div>
 }

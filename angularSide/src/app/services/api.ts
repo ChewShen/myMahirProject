@@ -14,4 +14,12 @@ export class Api {
   getCourses(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
+
+  generateQuiz(courseContent: string) {
+    // We send the content as a JSON object, exactly like we did in Postman!
+    return this.http.post<any>('http://localhost:3000/api/generate-quiz', { 
+      courseContent: courseContent 
+    });
+  }
+  
 }
