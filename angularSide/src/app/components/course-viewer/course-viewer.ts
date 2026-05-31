@@ -38,12 +38,10 @@ export class CourseViewer implements OnInit {
     this.isGenerating = true;
     this.cdr.detectChanges();
 
-    // Since your DB doesn't have a content column yet, we will send a fake paragraph to the AI!
-    const fakeContent = "Information technology (IT) is the use of computers to create, process, store, retrieve, and exchange all kinds of data and information. IT is typically used within the context of business operations as opposed to personal or entertainment technologies.";
 
-    this.apiService.generateQuiz(fakeContent).subscribe({
+    this.apiService.generateQuiz(this.courseData.courseContent).subscribe({
       next: (response) => {
-        console.log("AI Questions Arrived!", response.data);
+        console.log("Questions Arrived!", response.data);
         this.generatedQuiz = response.data; // Save the 5 questions!
         this.isGenerating = false;
         this.cdr.detectChanges();
@@ -76,6 +74,12 @@ export class CourseViewer implements OnInit {
 
     this.score = correctCount; // Save the final score!
     this.cdr.detectChanges();
+
+    this.apiService.saveScore(this.courseData.courseId, this.score, this.generatedQuiz.length)
+      .subscribe({
+        next: (res) => console.log("Score saved successfully!", res),
+        error: (err) => console.error("Failed to save score", err)
+      });
   }
 
   // 3. When the user closes the pop-up

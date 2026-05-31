@@ -105,6 +105,26 @@ app.post('/api/generate-quiz', async (req, res) => {
         }
     });
 
+
+//Save score to database
+app.post('/api/save-score', async (req, res) => {
+    try {
+        // Grab the data Angular sends us
+        const { courseId, score, totalQuestions } = req.body;
+
+        // Insert it into the new MySQL table
+        const [result] = await db.query(
+            'INSERT INTO quiz (courseId, score, totalQuestions) VALUES (?, ?, ?)', 
+            [courseId, score, totalQuestions]
+        );
+
+        res.status(200).json({ success: true, message: "Score saved permanently!" });
+    } catch (error) {
+        console.error("Database Error:", error);
+        res.status(500).json({ success: false, message: "Failed to save score." });
+    }
+});
+
 // Start Server
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);

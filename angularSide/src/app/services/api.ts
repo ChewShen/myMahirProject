@@ -21,5 +21,13 @@ export class Api {
       courseContent: courseContent 
     });
   }
-  
+
+  saveScore(courseId: number, score: number, totalQuestions: number) {
+    return this.http.post<any>('http://localhost:3000/api/save-score', { 
+      courseId: courseId,
+      score: score,
+      totalQuestions: totalQuestions
+    });
+  }
+
 }
