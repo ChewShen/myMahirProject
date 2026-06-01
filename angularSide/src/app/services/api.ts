@@ -30,4 +30,12 @@ export class Api {
     });
   }
 
+  login(userData: any) {
+    return this.http.post<any>('http://localhost:3000/api/login', userData);
+  }
+
+  register(userData: any) {
+    return this.http.post<any>('http://localhost:3000/api/register', userData);
+  }
+
 }
