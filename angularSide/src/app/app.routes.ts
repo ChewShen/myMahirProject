@@ -18,7 +18,7 @@ export const routes: Routes = [
   {
     path: 'course',
     component: CourseViewer,
-    canActivate:[authGuard,adminGuard] 
+    canActivate:[authGuard] 
   },
   { 
     path: 'admin-panel', 
