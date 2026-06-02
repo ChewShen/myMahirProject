@@ -1,5 +1,5 @@
 <header class="mb-lg">
-  <h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Welcome back, Ali.</h2>
+  <h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Welcome back, {{ user?.name || 'Student' }}.</h2>
   <p class="font-body-md text-body-md text-on-surface-variant">Here is an overview of your academic progress today.</p>
 </header>
 

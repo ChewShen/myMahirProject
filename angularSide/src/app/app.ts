@@ -18,13 +18,13 @@ export class App {
     public router: Router,
     private data:Data)
     {
-    this.user = this.data.loadStorage('user_role');
+    this.user = this.data.loadStorage('user_detail');
 
     this.data.observeEvent().subscribe((event: any) => {
       if (event.type === 'LOGIN_SUCCESS') {
         this.user = event.user;
       }
     });
-    
+
   }
 }
