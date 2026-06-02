@@ -38,4 +38,8 @@ export class Api {
     return this.http.post<any>('http://localhost:3000/api/register', userData);
   }
 
+  getAllScores(): Observable<any> {
+    return this.http.get<any>('http://localhost:3000/api/admin/scores');
+  }
+  
 }

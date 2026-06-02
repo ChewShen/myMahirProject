@@ -2,32 +2,40 @@
 
   @if (router.url !== '/login') {
   <nav class="hidden md:flex w-[280px] h-screen fixed left-0 top-0 shadow-sm bg-surface-container-lowest flex-col py-md gap-sm z-40 overflow-y-auto">
-    <div class="px-md mb-8">
-      <h1 class="font-headline-md text-headline-md font-bold text-primary">Student Portal</h1>
-      <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Academic Growth</p>
-    </div>
-    <ul class="flex flex-col gap-2 px-sm flex-grow">
-      <li>
-        <a routerLink="/" class="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container hover:bg-surface-container transition-colors duration-200">
-          <span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span>
-          <span class="font-body-md text-body-md">Dashboard</span>
-        </a>
-      </li>
-      <li>
-        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200">
-          <span class="material-symbols-outlined">school</span>
-          <span class="font-body-md text-body-md">My Courses</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+      <div class="px-md mb-8">
+        <h1 class="font-headline-md text-headline-md font-bold text-primary">Student Portal</h1>
+        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">
+          Welcome, {{ user?.name || 'Guest' }}
+        </p>
+      </div>
+      
+      <ul class="flex flex-col gap-2 px-sm flex-grow">
+        <li>
+          <a routerLink="/dashboard" class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-body-md text-body-md">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200">
+            <span class="material-symbols-outlined">school</span>
+            <span class="font-body-md text-body-md">My Courses</span>
+          </a>
+        </li>
 
-  <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl pb-[calc(12px+env(safe-area-inset-bottom))]">
-    <a routerLink="/" class="flex flex-col items-center justify-center text-primary font-bold">
-      <span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
-      <span class="font-label-sm text-label-sm mt-1">Home</span>
-    </a>
-  </nav>
+        @if (user?.role === 'admin') {
+          <li class="mt-4 mb-2 px-4">
+            <p class="text-xs font-bold text-outline uppercase tracking-wider">Admin Tools</p>
+          </li>
+          <li>
+            <a routerLink="/admin-panel" class="flex items-center gap-4 px-4 py-3 rounded-lg text-error font-bold bg-error-container hover:opacity-90 transition-colors duration-200">
+              <span class="material-symbols-outlined">admin_panel_settings</span>
+              <span class="font-body-md text-body-md">Manage Platform</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
 }
 
   <main 

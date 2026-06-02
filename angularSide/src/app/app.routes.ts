@@ -4,6 +4,7 @@ import { Dashboard } from './components/dashboard/dashboard';
 import { Auth } from './components/auth/auth';
 import { authGuard } from './guards/auth-guard';
 import { adminGuard } from './guards/admin-guard';
+import { AdminPanel } from './components/admin-panel/admin-panel';
 
 
 export const routes: Routes = [
@@ -18,6 +19,11 @@ export const routes: Routes = [
     path: 'course',
     component: CourseViewer,
     canActivate:[authGuard,adminGuard] 
+  },
+  { 
+    path: 'admin-panel', 
+    component: AdminPanel, 
+    canActivate: [authGuard, adminGuard] 
   },
 
   { path: '',redirectTo: 'login', pathMatch: 'full' }, // Default to login

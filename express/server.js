@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 const db = require('./config/db');
 
 const authRoutes = require('./routes/auth/auth');
+const adminRoutes = require('./routes/admin/admin');
 const verifyToken = require('./middleware/auth');
 const requireAdmin = require('./middleware/requireAdmin');
 
@@ -16,6 +17,8 @@ const requireAdmin = require('./middleware/requireAdmin');
 app.use(cors()); // Crucial: Allows Angular to talk to Express
 app.use(express.json()); // Allows Express to read JSON bodies
 app.use('/api', authRoutes);
+// protects EVERY SINGLE ROUTE inside the adminRoutes file!
+app.use('/api/admin', verifyToken, requireAdmin, adminRoutes);
 
 
 // Test Route: Phase 2 Milestone (GET /api/courses

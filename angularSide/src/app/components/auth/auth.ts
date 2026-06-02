@@ -49,7 +49,7 @@ export class Auth {
       next: (res) => {
         // SUCCESS! Save the JWT to the browser's secret vault
         this.data.saveStorage('login_token', res.token);
-        this.data.saveStorage('mymahir_user', res.user);
+        this.data.saveStorage('user_role', res.user);
         this.data.publishEvent({ type: 'LOGIN_SUCCESS', user: res.user });
         this.snackBar.open('Login Successful!', 'Close', { duration: 3000 });
 
