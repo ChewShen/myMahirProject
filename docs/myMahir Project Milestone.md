@@ -1,4 +1,4 @@
-**Phase 1 : Architecture & Design** 
+### **Phase 1 : Architecture & Design** 
 
 - [x] ~~Finalize the Database Schema (Write down the columns for `Users`, `Courses`, and `QuizResults`.~~  
 - [x] ~~Draw the Entity-Relationship Diagram (ERD).~~   

@@ -10,6 +10,7 @@ const db = require('./config/db');
 
 const authRoutes = require('./routes/auth/auth');
 const verifyToken = require('./middleware/auth');
+const requireAdmin = require('./middleware/requireAdmin');
 
 // Middleware
 app.use(cors()); // Crucial: Allows Angular to talk to Express
@@ -121,6 +122,9 @@ app.post('/api/save-score', verifyToken, async (req, res) => {
     }
 });
 
+app.get('/api/admin/all-scores', verifyToken, requireAdmin, async (req, res) => {
+    // Only admins can execute this code!
+});
 
 // Start Server
 app.listen(PORT, () => {
