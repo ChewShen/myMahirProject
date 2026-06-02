@@ -7,8 +7,9 @@ import { Data } from '../services/data';
 export const authGuard: CanActivateFn = (route, state) => {
    const router = inject(Router);
    const uiService = inject(Ui);
+   const data = inject(Data);
 
-   const token = localStorage.getItem('mymahir_token');
+   const token = data.loadStorage('login_token')
 
    if(token){
     return true;

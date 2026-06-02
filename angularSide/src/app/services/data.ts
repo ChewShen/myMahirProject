@@ -1,23 +1,32 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Data {
-  private tokenKey = 'mymahir_token';
-  saveToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
+  private eventSubject = new Subject<any>();
+  
+  constructor() {}
+
+  saveStorage(key: string, value: any) {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
-  getToken() {
-    return localStorage.getItem(this.tokenKey);
+  loadStorage(key: string) {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : null;
   }
 
-  logout() {
-    localStorage.removeItem(this.tokenKey);
+  removeStorage(key: string) {
+    localStorage.removeItem(key);
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getToken(); // Returns true if token exists
+  publishEvent(data: any) {
+    this.eventSubject.next(data);
+  }
+
+  observeEvent(): Subject<any> {
+    return this.eventSubject;
   }
 }

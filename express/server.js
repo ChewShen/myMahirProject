@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 const db = require('./config/db');
 
 const authRoutes = require('./routes/auth/auth');
+const verifyToken = require('./middleware/auth');
 
 // Middleware
 app.use(cors()); // Crucial: Allows Angular to talk to Express
@@ -100,15 +101,17 @@ app.post('/api/generate-quiz', async (req, res) => {
 
 
 //Save score to database
-app.post('/api/save-score', async (req, res) => {
+app.post('/api/save-score', verifyToken, async (req, res) => {
     try {
         // Grab the data Angular sends us
+        // const { courseId, score, totalQuestions } = req.body;
+        const userId = req.user.userId;
         const { courseId, score, totalQuestions } = req.body;
 
         // Insert it into the new MySQL table
         const [result] = await db.query(
-            'INSERT INTO quiz (courseId, score, totalQuestions) VALUES (?, ?, ?)', 
-            [courseId, score, totalQuestions]
+            'INSERT INTO quiz (userId, courseId, score, totalQuestions) VALUES (?, ?, ?, ?)', 
+            [userId, courseId, score, totalQuestions]
         );
 
         res.status(200).json({ success: true, message: "Score saved permanently!" });

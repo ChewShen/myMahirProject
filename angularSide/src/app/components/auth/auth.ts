@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Api } from '../../services/api';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Data } from '../../services/data';
 
 @Component({
   selector: 'app-auth',
@@ -23,7 +24,8 @@ export class Auth {
     private api: Api, 
     private router: Router,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private data :Data
   ) {
     // Login Form Rules
     this.loginForm = this.fb.group({
@@ -46,7 +48,9 @@ export class Auth {
     this.api.login(this.loginForm.value).subscribe({
       next: (res) => {
         // SUCCESS! Save the JWT to the browser's secret vault
-        localStorage.setItem('mymahir_token', res.token);
+        this.data.saveStorage('login_token', res.token);
+        this.data.saveStorage('mymahir_user', res.user);
+        this.data.publishEvent({ type: 'LOGIN_SUCCESS', user: res.user });
         this.snackBar.open('Login Successful!', 'Close', { duration: 3000 });
 
         this.isLoading = false;
