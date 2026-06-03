@@ -59,3 +59,6 @@ This application is built on a standard 3-Tier Architecture, separating the user
 4. AI Processing: Express takes the course text, wraps it in a secure prompt, and forwards it to the external AI Service (Gemini API) to generate contextual multiple-choice questions.
 5. AI Response: The AI Service successfully generates the questions and returns them to the Express server as a formatted JSON object.
 6. Client Render: Express relays the final JSON array back to the Angular frontend, which dynamically renders the interactive quiz interface for the student.
+
+
+### Installation [Will be added soon]
