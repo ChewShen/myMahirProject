@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Api } from '../../services/api';
 import { ChangeDetectorRef } from '@angular/core';
 import { SharedModule } from '../../shared/shared-module';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-course-viewer',
   imports: [...SharedModule],
@@ -16,22 +17,38 @@ export class CourseViewer implements OnInit {
   generatedQuiz: any[] = [];
 
   selectedAnswers: string[] = []; 
-  score: number | null = null;    
+  score: number | null = null;  
+  courseId: string | null = null
+  isLoading = true;
 
   constructor(
-    private apiService: Api,
-    private cdr: ChangeDetectorRef
+    private api: Api,
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     // Call the backend as soon as the component loads
-    this.apiService.getCourses().subscribe((response) => {
-      // Save the first course from the array into our variable
-      this.courseData = response.data[0]; 
-      console.log("Data from Express:", this.courseData);
-
-      this.cdr.detectChanges();
-    });
+    this.courseId = this.route.snapshot.paramMap.get('id');
+    
+    if (this.courseId){
+      if (this.courseId) {
+      // 4. Fetch the specific course data
+      // (Make sure you added getCourseById to your api.ts file!)
+      this.api.getCourseById(this.courseId).subscribe({
+        next: (res) => {
+          this.courseData = res.data;
+          this.isLoading = false;
+          this.cdr.detectChanges(); 
+        },
+        error: (err) => {
+          console.error("Failed to load course details", err);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
   }
   
   onGenerateQuiz() {
@@ -39,7 +56,7 @@ export class CourseViewer implements OnInit {
     this.cdr.detectChanges();
 
 
-    this.apiService.generateQuiz(this.courseData.courseContent).subscribe({
+    this.api.generateQuiz(this.courseData.courseContent).subscribe({
       next: (response) => {
         console.log("Questions Arrived!", response.data);
         this.generatedQuiz = response.data; // Save the 5 questions!
@@ -75,7 +92,7 @@ export class CourseViewer implements OnInit {
     this.score = correctCount; // Save the final score!
     this.cdr.detectChanges();
 
-    this.apiService.saveScore(this.courseData.courseId, this.score, this.generatedQuiz.length)
+    this.api.saveScore(this.courseData.courseId, this.score, this.generatedQuiz.length)
       .subscribe({
         next: (res) => console.log("Score saved successfully!", res),
         error: (err) => console.error("Failed to save score", err)

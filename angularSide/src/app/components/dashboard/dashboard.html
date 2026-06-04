@@ -28,7 +28,7 @@
               <p class="font-body-sm text-body-sm text-on-surface-variant mb-6 line-clamp-2 flex-grow">{{ course.courseContent }}</p>
               
               <div class="mt-auto">
-                <button routerLink="/course" class="w-full bg-surface-container text-primary hover:bg-surface-container-high font-label-md py-2 rounded-lg transition-colors">
+                <button [routerLink]="['/course', course.courseId]" class="w-full bg-surface-container text-primary hover:bg-surface-container-high font-label-md py-2 rounded-lg transition-colors">
                   Continue Learning
                 </button>
               </div>

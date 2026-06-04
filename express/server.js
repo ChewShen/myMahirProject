@@ -125,8 +125,42 @@ app.post('/api/save-score', verifyToken, async (req, res) => {
     }
 });
 
+// The ":id" tells Express to expect a dynamic variable in the URL
+app.get('/api/courses/:id', verifyToken, async (req, res) => {
+    try {
+        const courseId = req.params.id; // Extract the ID from the URL!
+        
+        const [rows] = await db.query('SELECT * FROM courses WHERE courseId = ?', [courseId]);
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: "Course not found" });
+        }
+
+        res.status(200).json({ success: true, data: rows[0] }); // Send back the single course object
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Database connection failed" });
+    }
+});
+
 app.get('/api/admin/all-scores', verifyToken, requireAdmin, async (req, res) => {
     // Only admins can execute this code!
+});
+
+app.get('/api/courses/:id', verifyToken, async (req, res) => {
+    try {
+        const courseId = req.params.id; 
+        const [rows] = await db.query('SELECT * FROM courses WHERE courseId = ?', [courseId]);
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: "Course not found" });
+        }
+
+        res.status(200).json({ success: true, data: rows[0] }); 
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Database connection failed" });
+    }
 });
 
 // Start Server
