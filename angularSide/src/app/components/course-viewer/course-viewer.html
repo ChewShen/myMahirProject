@@ -43,16 +43,18 @@
 }
 
 
-@if (generatedQuiz.length > 0) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/60 backdrop-blur-sm p-4 md:p-8">
+@if (isQuizOpen) {
+
+  <div (click)="closeQuiz()" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     
-    <div class="bg-surface-container-lowest w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl p-6 md:p-8 flex flex-col gap-8">
+    <div (click)="$event.stopPropagation()" class="bg-surface-container-lowest w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl p-6 md:p-8 flex flex-col gap-8">
       
       <header class="flex justify-between items-center border-b border-outline-variant/30 pb-4">
         <h2 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
           <span class="material-symbols-outlined">psychology</span>
           Quiz Time!
         </h2>
+        
         <button (click)="closeQuiz()" class="text-on-surface-variant hover:text-error transition-colors">
           <span class="material-symbols-outlined">close</span>
         </button>

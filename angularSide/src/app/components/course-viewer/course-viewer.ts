@@ -15,6 +15,7 @@ export class CourseViewer implements OnInit {
   courseData: any; // 
   isGenerating: boolean = false;
   generatedQuiz: any[] = [];
+  isQuizOpen: boolean = false;
 
   selectedAnswers: string[] = []; 
   score: number | null = null;  
@@ -52,7 +53,20 @@ export class CourseViewer implements OnInit {
   }
   
   onGenerateQuiz() {
+
+    if (this.generatedQuiz.length > 0 && this.score === null) {
+      const resume = window.confirm("You have an unfinished quiz in progress! Do you want to resume?");
+      
+      if (resume) {
+        this.isQuizOpen = true; // Just pop the modal back open!
+        this.cdr.detectChanges();
+        return; // Stop the function here so we don't ask the AI for new questions
+      }
+    }
+
     this.isGenerating = true;
+    this.generatedQuiz = [];
+    this.selectedAnswers = [];
     this.cdr.detectChanges();
 
 
@@ -60,7 +74,7 @@ export class CourseViewer implements OnInit {
       next: (response) => {
         console.log("Questions Arrived!", response.data);
         this.generatedQuiz = response.data; // Save the 5 questions!
-        this.isGenerating = false;
+        this.isQuizOpen = true;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -101,9 +115,14 @@ export class CourseViewer implements OnInit {
 
   // 3. When the user closes the pop-up
   closeQuiz() {
-    this.generatedQuiz = []; // This hides the modal!
-    this.selectedAnswers = [];
-    this.score = null;
+    if (this.score !== null) {
+      // 1. If they already submitted and got a score, completely reset it for next time.
+      this.generatedQuiz = []; 
+      this.selectedAnswers = [];
+      this.score = null;
+    }
+
+    this.isQuizOpen = false;
     this.cdr.detectChanges();
   }
 

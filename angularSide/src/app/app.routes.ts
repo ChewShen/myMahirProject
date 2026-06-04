@@ -27,14 +27,14 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard] 
   },
   { 
-    path: 'course/:id', // The colon (:) means 'id' is a dynamic variable!
+    path: 'course/:id', 
     component: CourseViewer, 
     canActivate: [authGuard] 
   },
   { 
     path: 'profile', 
     component: Profile, 
-    canActivate: [authGuard] // 🔒 Must be logged in!
+    canActivate: [authGuard] 
   },
 
   { path: '',redirectTo: 'login', pathMatch: 'full' }, // Default to login
