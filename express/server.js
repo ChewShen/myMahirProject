@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -10,7 +9,7 @@ const db = require('./config/db');
 //routing
 const authRoutes = require('./routes/auth/auth');
 const adminRoutes = require('./routes/admin/admin');
-const courseRoutes = require('./routes/courses');
+const courseRoutes = require('./routes/courses/courses');
 
 // middleware
 const verifyToken = require('./middleware/auth');

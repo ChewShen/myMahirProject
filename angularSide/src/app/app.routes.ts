@@ -5,6 +5,7 @@ import { Auth } from './components/auth/auth';
 import { authGuard } from './guards/auth-guard';
 import { adminGuard } from './guards/admin-guard';
 import { AdminPanel } from './components/admin-panel/admin-panel';
+import { Profile } from './components/profile/profile';
 
 
 export const routes: Routes = [
@@ -29,6 +30,11 @@ export const routes: Routes = [
     path: 'course/:id', // The colon (:) means 'id' is a dynamic variable!
     component: CourseViewer, 
     canActivate: [authGuard] 
+  },
+  { 
+    path: 'profile', 
+    component: Profile, 
+    canActivate: [authGuard] // 🔒 Must be logged in!
   },
 
   { path: '',redirectTo: 'login', pathMatch: 'full' }, // Default to login

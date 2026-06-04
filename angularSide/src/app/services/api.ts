@@ -17,13 +17,13 @@ export class Api {
 
   generateQuiz(courseContent: string) {
     // We send the content as a JSON object, exactly like we did in Postman!
-    return this.http.post<any>('http://localhost:3000/api/generate-quiz', { 
+    return this.http.post<any>('http://localhost:3000/api/courses/generate-quiz', { 
       courseContent: courseContent 
     });
   }
 
   saveScore(courseId: number, score: number, totalQuestions: number) {
-    return this.http.post<any>('http://localhost:3000/api/save-score', { 
+    return this.http.post<any>('http://localhost:3000/api/courses/save-score', { 
       courseId: courseId,
       score: score,
       totalQuestions: totalQuestions
@@ -48,6 +48,10 @@ export class Api {
 
   getCourseById(id: string | number): Observable<any> {
     return this.http.get<any>(`http://localhost:3000/api/courses/${id}`);
+  }
+
+  getMyScores(): Observable<any> {
+    return this.http.get<any>('http://localhost:3000/api/courses/my-scores');
   }
   
 }

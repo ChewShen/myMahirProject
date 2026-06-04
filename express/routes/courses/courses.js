@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db'); // Adjust path if needed
+const db = require('../../config/db'); 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const verifyToken = require('../middleware/auth');
+const verifyToken = require('../../middleware/auth');
+
+
 
 // GET ALL COURSES
 router.get('/', async (req, res) => {
@@ -13,6 +15,30 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Database connection failed" });
+    }
+});
+
+// GET YOUR PERSONAL SCORES
+// URL will be: GET /api/courses/my-scores
+router.get('/my-scores', verifyToken, async (req, res) => {
+    try {
+        // Because of verifyToken, we know EXACTLY who is asking!
+        const userId = req.user.userId; 
+
+        // We use a SQL JOIN so we can get the actual Course Name, not just the ID number
+        const query = `
+            SELECT courses.courseName, quiz.score, quiz.totalQuestions 
+            FROM quiz
+            JOIN courses ON quiz.courseId = courses.courseId
+            WHERE quiz.userId = ? 
+            ORDER BY quiz.quizId DESC
+        `;
+        
+        const [results] = await db.query(query, [userId]);
+        res.status(200).json({ success: true, data: results });
+    } catch (err) {
+        console.error("Profile DB Error:", err);
+        res.status(500).json({ success: false, message: "Failed to fetch your scores." });
     }
 });
 

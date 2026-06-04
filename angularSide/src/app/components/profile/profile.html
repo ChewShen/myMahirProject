@@ -1,0 +1,53 @@
+<div class="w-full max-w-4xl mx-auto py-8 px-4">
+  <div class="mb-8 flex items-center gap-4 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant">
+    <div class="w-16 h-16 bg-primary text-on-primary rounded-full flex items-center justify-center text-2xl font-bold">
+      {{ user?.name?.charAt(0) | uppercase }}
+    </div>
+    <div>
+      <h1 class="text-2xl font-bold text-on-surface">{{ user?.name || 'Student' }}</h1>
+      <p class="text-on-surface-variant">{{ user?.email }}</p>
+    </div>
+  </div>
+
+  <h2 class="text-xl font-bold text-primary mb-4">My Quiz History</h2>
+
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+    @if (isLoading) {
+      <div class="p-8 text-center text-on-surface-variant font-bold">Loading your history...</div>
+    } @else {
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container text-primary font-bold text-sm uppercase border-b border-outline-variant">
+              <th class="p-4">Course</th>
+              <th class="p-4 text-center">Score</th>
+              <th class="p-4">Status</th>
+            </tr>
+          </thead>
+          <tbody class="text-on-surface">
+            @for (item of myScores; track item) {
+              <tr class="border-b border-outline-variant hover:bg-surface-container-highest transition-colors">
+                <td class="p-4 font-bold">{{ item.courseName }}</td>
+                <td class="p-4 text-center font-mono font-bold text-primary">
+                  {{ item.score }} / {{ item.totalQuestions }}
+                </td>
+                <td class="p-4">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold"
+                        [class]="(item.score / item.totalQuestions) >= 0.5 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                    {{ (item.score / item.totalQuestions) >= 0.5 ? 'PASSED' : 'FAILED' }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="p-8 text-center text-on-surface-variant italic">
+                  You haven't taken any quizzes yet! Go learn something new!
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
