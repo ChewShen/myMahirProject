@@ -32,18 +32,7 @@ export class AdminPanel {
   }
 
   ngOnInit() {
-    this.api.getAllScores().subscribe({
-      next : (res) => {
-        this.allScores = res.data;
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Failed to laod scores",err);
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      }
-    });
+    this.fetchScores();
   }
 
   fetchScores() {

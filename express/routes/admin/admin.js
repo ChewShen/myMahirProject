@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../config/db');
 
-// ROUTE 1: Create a new Course
-router.post('/courses', async (req, res) => {
-    // Logic to insert a new course into the database
-});
 
 // ROUTE 2: Get all student scores for the dashboard
 router.get('/scores', async (req, res) => {
@@ -32,14 +28,14 @@ router.get('/students', async (req, res) => {
 
 router.post('/courses', async (req, res) => {
     try {
-        const { name, content } = req.body;
-
+        // 1. Extract exactly what Angular sends! (title, description, content)
+        const { title, content } = req.body;
         const authorId = req.user.userId;
         
-        // Note: Make sure your 'courses' table actually has title, description, and content columns!
+        // 2. Map 'title' to your 'courseName' column, and add the description!
         const [result] = await db.query(
-            'INSERT INTO courses (courseName, status, courseContent, authorId) VALUES (?, "open", ?,?)', 
-            [name, content, authorId]
+            'INSERT INTO courses (courseName, courseStatus, courseContent, authorId) VALUES (?, "open", ?, ?)', 
+            [title, content, authorId] // Order must match the ? marks!
         );
 
         res.status(201).json({ success: true, message: "Course published successfully!" });
