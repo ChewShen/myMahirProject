@@ -30,4 +30,23 @@ router.get('/students', async (req, res) => {
     // Logic to SELECT * FROM users WHERE role = 'student'
 });
 
+router.post('/courses', async (req, res) => {
+    try {
+        const { name, content } = req.body;
+
+        const authorId = req.user.userId;
+        
+        // Note: Make sure your 'courses' table actually has title, description, and content columns!
+        const [result] = await db.query(
+            'INSERT INTO courses (courseName, status, courseContent, authorId) VALUES (?, "open", ?,?)', 
+            [name, content, authorId]
+        );
+
+        res.status(201).json({ success: true, message: "Course published successfully!" });
+    } catch (err) {
+        console.error("Course Creation Error:", err);
+        res.status(500).json({ success: false, message: "Failed to publish course.", exactError: err.message });
+    }
+});
+
 module.exports = router;

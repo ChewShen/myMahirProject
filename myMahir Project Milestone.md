@@ -41,3 +41,10 @@
 - [ ] Write a `Dockerfile` for the Express backend.
 - [ ] Write a `Dockerfile` for the Angular frontend.
 - [ ] Write a `docker-compose.yml` file to link frontend, backend, and a MySQL container.
+
+### 🚀 Phase 8: Advanced Document Processing (V2 / Future Goal)
+- [ ] **Admin UI:** Create a drag-and-drop file upload interface (PDF/DOCX) for teachers to add new course material.
+- [ ] **Backend Middleware:** Implement `multer` in Express to handle multipart/form-data file uploads safely.
+- [ ] **Document Conversion:** Integrate Microsoft `markitdown` (or similar) to convert uploaded PDFs/DOCs into structured Markdown.
+- [ ] **AI Pipeline Upgrade:** Send the newly formatted Markdown to Gemini for highly contextual, structured quiz generation.
+- [ ] **Database Update:** Store the generated Markdown text (or file path) in the MySQL `courses` table.

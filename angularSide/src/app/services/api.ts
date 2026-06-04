@@ -42,4 +42,8 @@ export class Api {
     return this.http.get<any>('http://localhost:3000/api/admin/scores');
   }
   
+  createCourse(courseData: any): Observable<any> {
+    return this.http.post<any>('http://localhost:3000/api/admin/courses', courseData);
+  }
+  
 }
