@@ -27,8 +27,11 @@ CREATE TABLE `courses` (
   `courseName` varchar(45) DEFAULT NULL,
   `courseStatus` varchar(45) DEFAULT NULL,
   `courseContent` varchar(300) DEFAULT NULL,
-  PRIMARY KEY (`courseId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `authorId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`courseId`),
+  KEY `fk_course_author` (`authorId`),
+  CONSTRAINT `fk_course_author` FOREIGN KEY (`authorId`) REFERENCES `users` (`userId`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +40,7 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'Information Technology','Open','Information technology (IT) is the use of computers to create, process, store, retrieve, and exchange all kinds of data and information. IT is typically used within the context of business operations as opposed to personal or entertainment technologies.'),(2,'Data Structure','Open',NULL);
+INSERT INTO `courses` VALUES (1,'Information Technology','Open','Information technology (IT) is the use of computers to create, process, store, retrieve, and exchange all kinds of data and information. IT is typically used within the context of business operations as opposed to personal or entertainment technologies.',NULL),(2,'Data Structure','Open',NULL,NULL),(3,'test','open','⁠Cloudflare is a global cloud platform that enhances the security, performance, and reliability of internet properties. Acting as a massive reverse proxy, it routes web traffic through its expansive edge network to block cyber threats (like DDoS attacks) while speeding up load times via content cach',5);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-03 22:14:38
+-- Dump completed on 2026-06-04 20:27:13
