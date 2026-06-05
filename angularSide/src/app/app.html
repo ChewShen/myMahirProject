@@ -1,29 +1,38 @@
 <div class="bg-background text-on-background min-h-screen flex antialiased">
-
   @if (router.url !== '/login') {
-  <nav class="hidden md:flex w-[280px] h-screen fixed left-0 top-0 shadow-sm bg-surface-container-lowest flex-col py-md gap-sm z-40 overflow-y-auto">
+    <nav
+      class="hidden md:flex w-[280px] h-screen fixed left-0 top-0 shadow-sm bg-surface-container-lowest flex-col py-md gap-sm z-40 overflow-y-auto"
+    >
       <div class="px-md mb-8">
         <h1 class="font-headline-md text-headline-md font-bold text-primary">Student Portal</h1>
         <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">
           Welcome, {{ user?.name || 'Guest' }}
         </p>
       </div>
-      
-      <ul class="flex flex-col gap-2 px-sm flex-grow">
+
+      <ul class="flex flex-col gap-2 px-sm flex-grow overflow-y-auto mb-4">
         <li>
-          <a routerLink="/dashboard" class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200">
+          <a
+            routerLink="/dashboard"
+            class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200"
+          >
             <span class="material-symbols-outlined">dashboard</span>
             <span class="font-body-md text-body-md">Dashboard</span>
           </a>
         </li>
         <li>
-          <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200">
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200"
+          >
             <span class="material-symbols-outlined">school</span>
             <span class="font-body-md text-body-md">My Courses</span>
           </a>
         </li>
         <li>
-          <a routerLink="/profile" class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200">
+          <a
+            routerLink="/profile"
+            class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200"
+          >
             <span class="material-symbols-outlined">person</span>
             <span class="font-body-md text-body-md">My Profile</span>
           </a>
@@ -34,21 +43,33 @@
             <p class="text-xs font-bold text-outline uppercase tracking-wider">Admin Tools</p>
           </li>
           <li>
-            <a routerLink="/admin-panel" class="flex items-center gap-4 px-4 py-3 rounded-lg text-error font-bold bg-error-container hover:opacity-90 transition-colors duration-200">
+            <a
+              routerLink="/admin-panel"
+              class="flex items-center gap-4 px-4 py-3 rounded-lg text-error font-bold bg-error-container hover:opacity-90 transition-colors duration-200"
+            >
               <span class="material-symbols-outlined">admin_panel_settings</span>
               <span class="font-body-md text-body-md">Manage Platform</span>
             </a>
           </li>
         }
       </ul>
-    </nav>
-}
 
-  <main 
+      <div class="mt-auto px-4 pt-4 border-t border-outline-variant">
+        <button
+          (click)="onLogout()"
+          class="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-error hover:bg-error/10 transition-colors duration-200 font-bold"
+        >
+          <span class="material-symbols-outlined">logout</span>
+          <span>Log Out</span>
+        </button>
+      </div>
+    </nav>
+  }
+
+ <main 
     [class]="router.url === '/login' 
       ? 'flex-1 w-full min-h-screen flex items-center justify-center' 
       : 'flex-1 md:ml-[280px] p-margin-mobile md:p-margin-desktop max-w-max-width mx-auto w-full pb-32 md:pb-margin-desktop'">
     <router-outlet></router-outlet>
   </main>
-
 </div>

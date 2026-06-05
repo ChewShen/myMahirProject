@@ -8,7 +8,7 @@ const verifyToken = require('../../middleware/auth');
 
 
 // GET ALL COURSES
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM courses');
         res.status(200).json({ success: true, data: rows });

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Data } from './services/data';
+import { Ui } from './services/ui';
 
 
 @Component({
@@ -16,7 +17,8 @@ export class App {
 
   constructor(
     public router: Router,
-    private data:Data)
+    private data: Data,
+    private ui: Ui)
     {
     this.user = this.data.loadStorage('user_detail');
 
@@ -27,4 +29,14 @@ export class App {
     });
 
   }
+
+  onLogout() {
+    // 1. Destroy the token and any saved user details
+    this.data.removeStorage('user_detail'); 
+    
+    // 2. Redirect them back to the login page
+    this.ui.openSnackBar('Logged Out Successfully!');
+    this.router.navigate(['/login']); 
+  }
+
 }
