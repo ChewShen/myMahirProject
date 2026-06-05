@@ -32,7 +32,7 @@ To ensure on-time delivery of this MVP within a strict timeline, the development
 
 ![Project Gantt Chart](./docs/gantt-chart.png)
 
-📄 _[Click here to view the detailed Milestone Planning Document](https://docs.google.com/document/d/1UuJ6O7F2Hgz0sb7BbdnKOAMNAJoKGBR2ZDlPvYD9E_E/edit?usp=sharing)
+📄 _[Click here to view the detailed Milestone Planning Document]_(https://docs.google.com/document/d/1UuJ6O7F2Hgz0sb7BbdnKOAMNAJoKGBR2ZDlPvYD9E_E/edit?usp=sharing)
 
 ---
 

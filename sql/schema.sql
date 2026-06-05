@@ -1,0 +1,32 @@
+-- 1. THE USERS TABLE
+CREATE TABLE users (
+  userId INTEGER PRIMARY KEY AUTOINCREMENT,
+  userName TEXT NOT NULL,
+  userEmail TEXT NOT NULL UNIQUE,
+  userPassword TEXT NOT NULL,
+  userStatus TEXT DEFAULT 'active',
+  quizCompleted INTEGER DEFAULT 0,
+  userRole TEXT DEFAULT 'student'
+);
+
+-- 2. THE COURSES TABLE
+CREATE TABLE courses (
+  courseId INTEGER PRIMARY KEY AUTOINCREMENT,
+  courseName TEXT NOT NULL,
+  courseStatus TEXT DEFAULT 'Draft',
+  courseContent TEXT,
+  authorId INTEGER,
+  FOREIGN KEY (authorId) REFERENCES users (userId) ON DELETE SET NULL
+);
+
+-- 3. THE QUIZ TABLE
+CREATE TABLE quiz (
+  quizId INTEGER PRIMARY KEY AUTOINCREMENT,
+  courseId INTEGER NOT NULL,
+  userId INTEGER NOT NULL,
+  score INTEGER NOT NULL DEFAULT 0,
+  totalQuestions INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (courseId) REFERENCES courses (courseId) ON DELETE CASCADE,
+  FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
+);
