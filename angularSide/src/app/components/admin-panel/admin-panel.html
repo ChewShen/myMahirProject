@@ -125,7 +125,14 @@
               <tr class="border-b border-outline-variant hover:bg-surface-container-highest transition-colors">
                 <td class="p-4 font-mono text-on-surface-variant">#{{ course.courseId }}</td>
                 <td class="p-4 font-bold">{{ course.courseName || course.title }}</td>
-                <td class="p-4 text-right">
+
+                <td class="p-4 text-right flex justify-end gap-2">
+                  <button (click)="onEditCourse(course)" 
+                          class="text-secondary hover:bg-secondary/10 p-2 rounded-lg transition-colors inline-flex items-center gap-2 font-bold">
+                    <span class="material-symbols-outlined text-sm">edit</span> 
+                    Edit
+                  </button>
+
                   <button (click)="onDeleteCourse(course.courseId)" 
                           class="text-error hover:bg-error/10 p-2 rounded-lg transition-colors inline-flex items-center gap-2 font-bold">
                     <span class="material-symbols-outlined text-sm">delete</span> 

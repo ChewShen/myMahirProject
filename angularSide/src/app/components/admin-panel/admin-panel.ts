@@ -13,6 +13,7 @@ import { Ui } from '../../services/ui';
 export class AdminPanel {
   allScores: any[] = [];
   allCourses : any[] = [];
+  editingCourseId: string | null = null;
   isLoading = true;
   isCreating = false;
 
@@ -68,22 +69,40 @@ export class AdminPanel {
 
   onSubmitCourse() {
     if (this.courseForm.invalid) return;
-    
     this.isSubmitting = true;
-    this.api.createCourse(this.courseForm.value).subscribe({
-      next: (res) => {
-        this.uiservice.openSnackBar('Course Created Successfully!');
-        this.courseForm.reset();
-        this.isSubmitting = false;
-        this.isCreating = false; // Go back to the table view
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.uiservice.openSnackBar('Error creating course.');
-        this.isSubmitting = false;
-        this.cdr.detectChanges();
-      }
-    });
+
+    if (this.editingCourseId){
+      this.api.updateCourse(this.editingCourseId, this.courseForm.value).subscribe({
+        next: (res) => {
+          this.uiservice.openSnackBar('Course Updated Successfully!');
+          this.resetFormState();
+        },
+        error: (err) => this.handleError('Error updating course.', err)
+      });
+    } else {
+      this.api.createCourse(this.courseForm.value).subscribe({
+        next: (res) => {
+          this.uiservice.openSnackBar('Course Created Successfully!');
+          this.resetFormState();
+        },
+        error: (err) => this.handleError('Error creating course.', err)
+      });
+    }
+  }
+
+  resetFormState() {
+    this.courseForm.reset();
+    this.isSubmitting = false;
+    this.isCreating = false; 
+    this.editingCourseId = null; // Clear the edit state
+    this.fetchCourses(); // Reload the table to see the fresh data!
+    this.cdr.detectChanges();
+  }
+
+  handleError(msg: string, err: any) {
+    this.uiservice.openSnackBar(msg);
+    this.isSubmitting = false;
+    this.cdr.detectChanges();
   }
 
   onDeleteCourse(courseId: string) {
@@ -105,5 +124,20 @@ export class AdminPanel {
       });
     }
   }
+
+  onEditCourse(course: any) {
+    this.isCreating = true; // Switch to the form view
+    this.editingCourseId = course.courseId; // Remember WHICH course we are editing
+    
+    // Automatically fill in the form with the existing data!
+    this.courseForm.patchValue({
+      title: course.courseName || course.title,
+      description: 'Course Update', // You don't actually have a description column in MySQL, so we can ignore this
+      content: course.courseContent
+    });
+    
+    this.cdr.detectChanges();
+  }
+
   
 }

@@ -58,4 +58,8 @@ export class Api {
     return this.http.delete<any>(`http://localhost:3000/api/admin/courses/${courseId}`);
   }
   
+  updateCourse(courseId: string | number, courseData: any): Observable<any> {
+    return this.http.put<any>(`http://localhost:3000/api/admin/courses/${courseId}`, courseData);
+  }
+  
 }

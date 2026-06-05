@@ -68,4 +68,22 @@ router.delete('/courses/:id', verifyToken, requireAdmin, async (req, res) => {
     }
 });
 
+// PUT /api/admin/courses/:id
+router.put('/courses/:id', verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const { title, content } = req.body;
+        const courseId = req.params.id;
+        
+        await db.query(
+            'UPDATE courses SET courseName = ?, courseContent = ? WHERE courseId = ?', 
+            [title, content, courseId]
+        );
+
+        res.status(200).json({ success: true, message: "Course updated successfully!" });
+    } catch (err) {
+        console.error("Update Error:", err);
+        res.status(500).json({ success: false, message: "Failed to update course." });
+    }
+});
+
 module.exports = router;
