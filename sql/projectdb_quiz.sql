@@ -24,13 +24,17 @@ DROP TABLE IF EXISTS `quiz`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `quiz` (
   `quizId` int(11) NOT NULL AUTO_INCREMENT,
-  `courseId` varchar(45) DEFAULT NULL,
-  `userId` varchar(45) DEFAULT NULL,
-  `score` varchar(45) DEFAULT NULL,
+  `courseId` int(11) DEFAULT NULL,
+  `userId` int(11) DEFAULT NULL,
+  `score` int(11) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `totalQuestions` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`quizId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `totalQuestions` int(11) DEFAULT 0,
+  PRIMARY KEY (`quizId`),
+  KEY `courseId_idx` (`courseId`),
+  KEY `userId_idx` (`userId`),
+  CONSTRAINT `fk_quiz_course` FOREIGN KEY (`courseId`) REFERENCES `courses` (`courseId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_quiz_user` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +43,7 @@ CREATE TABLE `quiz` (
 
 LOCK TABLES `quiz` WRITE;
 /*!40000 ALTER TABLE `quiz` DISABLE KEYS */;
-INSERT INTO `quiz` VALUES (1,NULL,NULL,'3',NULL,'5'),(2,NULL,NULL,'3','2026-05-31 16:30:31','5'),(3,'1','1','2','2026-05-31 16:33:19','5'),(4,'1','1','3','2026-06-02 08:48:02','5');
+INSERT INTO `quiz` VALUES (1,NULL,NULL,3,NULL,5),(2,NULL,NULL,3,'2026-05-31 16:30:31',5),(3,1,1,2,'2026-05-31 16:33:19',5),(4,1,1,3,'2026-06-02 08:48:02',5),(5,3,4,4,'2026-06-04 15:47:11',5),(6,3,4,0,'2026-06-05 04:27:01',5),(7,3,4,0,'2026-06-05 04:47:17',5),(8,4,4,5,'2026-06-05 07:43:31',5),(9,4,4,0,'2026-06-05 07:43:51',5);
 /*!40000 ALTER TABLE `quiz` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-04 20:27:13
+-- Dump completed on 2026-06-05 15:45:18

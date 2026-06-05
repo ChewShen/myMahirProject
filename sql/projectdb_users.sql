@@ -24,10 +24,10 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `userId` int(11) NOT NULL AUTO_INCREMENT,
-  `userName` varchar(50) DEFAULT NULL,
-  `userEmail` varchar(100) DEFAULT NULL,
+  `userName` varchar(100) DEFAULT NULL,
+  `userEmail` varchar(255) DEFAULT NULL,
   `userPassword` varchar(255) DEFAULT NULL,
-  `userStatus` varchar(45) DEFAULT NULL,
+  `userStatus` varchar(45) DEFAULT 'active',
   `quizCompleted` int(11) DEFAULT NULL,
   `userRole` varchar(45) DEFAULT 'student',
   PRIMARY KEY (`userId`),
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-04 20:27:13
+-- Dump completed on 2026-06-05 15:45:18
