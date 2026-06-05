@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../config/db');
 
-
+const verifyToken = require('../../middleware/auth');
+const requireAdmin = require('../../middleware/auth');
 // ROUTE 2: Get all student scores for the dashboard
 router.get('/scores', async (req, res) => {
     try {
@@ -42,6 +43,28 @@ router.post('/courses', async (req, res) => {
     } catch (err) {
         console.error("Course Creation Error:", err);
         res.status(500).json({ success: false, message: "Failed to publish course.", exactError: err.message });
+    }
+});
+
+// DELETE /api/admin/courses/:id
+router.delete('/courses/:id', verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const courseId = req.params.id;
+
+        // 1. Delete associated quizzes first to prevent Foreign Key errors
+        await db.query('DELETE FROM quiz WHERE courseId = ?', [courseId]);
+
+        // 2. Delete the course itself
+        const [result] = await db.query('DELETE FROM courses WHERE courseId = ?', [courseId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Course not found." });
+        }
+
+        res.status(200).json({ success: true, message: "Course securely deleted." });
+    } catch (error) {
+        console.error("Delete Error:", error);
+        res.status(500).json({ success: false, message: "Failed to delete course." });
     }
 });
 

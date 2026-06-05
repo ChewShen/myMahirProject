@@ -53,5 +53,9 @@ export class Api {
   getMyScores(): Observable<any> {
     return this.http.get<any>('http://localhost:3000/api/courses/my-scores');
   }
+
+  deleteCourse(courseId: string | number): Observable<any> {
+    return this.http.delete<any>(`http://localhost:3000/api/admin/courses/${courseId}`);
+  }
   
 }

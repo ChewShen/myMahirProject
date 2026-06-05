@@ -28,23 +28,16 @@
 - [x] Implement Role-Based Access Control (RBAC) (dynamic roles from DB: Student vs Admin).
 - [x] Build Admin Panel UI to view all student scores (`GET /api/scores` join query).
 
-### 🚧 Phase 6: The Polish (Core Logic & Presentation)
+### ✅ Phase 6: The Polish (Core Logic & Presentation)
 - [x] Write backend logic to save the final quiz score back to the database (`POST /api/save-score`).
 - [x] Create foundational Dashboard component.
 - [x] Update Dashboard to dynamically display multiple available courses from the database.
-- [ ] **Pending:** Ensure AI quizzes are generated dynamically based on the specifically selected material (Pass `courseId` from Dashboard -> CourseViewer).
-- [ ] **Pending:** Implement "Quit Midway" logic (detect if user closes modal before submitting and warn/handle).
-- [ ] **Added Task:** Protect the `/admin` Angular route with a specialized `adminGuard` so students cannot access it.
-- [ ] **Added Task:** Create a Student Profile view (so students can see their own past scores, not just admins).
+- [x] Ensure AI quizzes are generated dynamically based on the specifically selected material (Pass `courseId` from Dashboard -> CourseViewer).
+- [x] Implement "Quit Midway" logic using a brilliant Local Storage Pause & Resume system.
+- [x] Protect the `/admin-panel` Angular route with a specialized `adminGuard`.
+- [x] Create a Student Profile view (so students can see their own past scores).
 
 ### ⏳ Phase 7: Containerization (Stretch Goal)
 - [ ] Write a `Dockerfile` for the Express backend.
 - [ ] Write a `Dockerfile` for the Angular frontend.
 - [ ] Write a `docker-compose.yml` file to link frontend, backend, and a MySQL container.
-
-### 🚀 Phase 8: Advanced Document Processing (V2 / Future Goal)
-- [ ] **Admin UI:** Create a drag-and-drop file upload interface (PDF/DOCX) for teachers to add new course material.
-- [ ] **Backend Middleware:** Implement `multer` in Express to handle multipart/form-data file uploads safely.
-- [ ] **Document Conversion:** Integrate Microsoft `markitdown` (or similar) to convert uploaded PDFs/DOCs into structured Markdown.
-- [ ] **AI Pipeline Upgrade:** Send the newly formatted Markdown to Gemini for highly contextual, structured quiz generation.
-- [ ] **Database Update:** Store the generated Markdown text (or file path) in the MySQL `courses` table.

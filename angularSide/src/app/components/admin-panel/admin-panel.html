@@ -103,4 +103,48 @@
       }
     }
   </div>
+
+  @if (!isCreating) {
+    <div class="mt-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+      <div class="p-6 border-b border-outline-variant">
+        <h3 class="text-xl font-bold text-primary">Manage Active Courses</h3>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container text-primary font-bold text-sm uppercase tracking-wider border-b border-outline-variant">
+              <th class="p-4">Course ID</th>
+              <th class="p-4">Title</th>
+              <th class="p-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="text-on-surface">
+            
+            @for (course of allCourses; track course.courseId) {
+              <tr class="border-b border-outline-variant hover:bg-surface-container-highest transition-colors">
+                <td class="p-4 font-mono text-on-surface-variant">#{{ course.courseId }}</td>
+                <td class="p-4 font-bold">{{ course.courseName || course.title }}</td>
+                <td class="p-4 text-right">
+                  <button (click)="onDeleteCourse(course.courseId)" 
+                          class="text-error hover:bg-error/10 p-2 rounded-lg transition-colors inline-flex items-center gap-2 font-bold">
+                    <span class="material-symbols-outlined text-sm">delete</span> 
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="p-8 text-center text-on-surface-variant italic">
+                  No courses active. Try creating one!
+                </td>
+              </tr>
+            }
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
 </div>

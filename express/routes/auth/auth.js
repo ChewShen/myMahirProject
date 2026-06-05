@@ -61,5 +61,31 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.post('/setup-admin', async (req, res) => {
+    try {
+        const { email, password, name, devKey } = req.body;
+
+        // 1. Check the secret key (Only you know this!)
+        if (devKey !== process.env.DEV_SECRET_KEY) {
+            return res.status(403).json({ success: false, message: "Unauthorized." });
+        }
+
+        // 2. Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // 3. Create the user directly as an Admin
+        const [result] = await db.query(
+            'INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)', 
+            [email, hashedPassword, name, 'admin']
+        );
+
+        res.status(201).json({ success: true, message: "Admin account provisioned!" });
+
+    } catch (error) {
+        console.error("Admin Setup Error:", error);
+        res.status(500).json({ success: false, message: "Server error." });
+    }
+});
+
 // 3. Export the router so server.js can use it!
 module.exports = router;
