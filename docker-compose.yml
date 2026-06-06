@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # 1. THE DATABASE SERVICE
+  db:
+    image: mysql:8.0
+    container_name: mymahir-mysql-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: elearning-db
+      MYSQL_ROOT_PASSWORD: myMahir2026
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Optional: Put your schema.sql inside your sql folder to auto-seed tables!
+      - ./sql:/docker-entrypoint-initdb.d 
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmyMahir2026"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. THE BACKEND Rest API
+  backend:
+    build: ./express
+    container_name: mymahir-express-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DEV_SECRET_KEY=${DEV_SECRET_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 3. THE FRONTEND UI
+  frontend:
+    build: ./angularside
+    container_name: mymahir-angular-ui
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

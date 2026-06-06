@@ -1,0 +1,20 @@
+# Use an official Node runtime blueprint
+FROM node:20-alpine
+
+# Set directory inside container
+WORKDIR /app
+
+# Copy dependency mappings
+COPY package*.json ./
+
+# Install standard node modules
+RUN npm install
+
+# Copy application source code
+COPY . .
+
+# Expose Express internal port
+EXPOSE 3000
+
+# Fire up the engine
+CMD ["npm", "start"]

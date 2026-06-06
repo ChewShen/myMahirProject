@@ -75,7 +75,7 @@ router.post('/setup-admin', async (req, res) => {
 
         // 3. Create the user directly as an Admin
         const [result] = await db.query(
-            'INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)', 
+            'INSERT INTO users (userEmail, userPassword, userName, userRole) VALUES (?, ?, ?, ?)', 
             [email, hashedPassword, name, 'admin']
         );
 
