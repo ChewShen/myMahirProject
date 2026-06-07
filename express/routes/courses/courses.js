@@ -80,8 +80,26 @@ router.post('/generate-quiz', verifyToken, async (req, res) => {
 
         const result = await model.generateContent(prompt);
         const responseText = result.response.text();
-        const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-        const quizQuestions = JSON.parse(cleanJson);
+
+        const cleanJson = responseText
+                        .replace(/```json\n?/gi, '')
+                        .replace(/```\n?/g, '')
+                        .trim();
+        try {
+            const quizQuestions = JSON.parse(cleanJson);
+            // If parsing succeeds, return the dynamic structured array layout payload
+            return res.status(200).json({ success: true, data: quizQuestions });
+        } catch (parseError) {
+            // Logs out format structure discrepancies securely inside Docker logs
+            console.error("Malformed AI JSON String detected! Raw output was:", responseText);
+            
+            // Catches the formatting failure gracefully instead of throwing a 500 error
+            return res.status(422).json({ 
+                success: false, 
+                message: "The AI generated an unstable data format structure. Please click the button to try again!",
+                errorDetails: parseError.message 
+            });
+        }
 
         res.status(200).json({ success: true, data: quizQuestions });
     } catch (error) {

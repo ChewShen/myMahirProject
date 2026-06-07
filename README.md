@@ -50,14 +50,31 @@ The database design uses normalized relational tables to link Users, Courses, an
 This application is built on a standard 3-Tier Architecture, separating the user interface, business logic, and database management.
 
 ### The Architectural Layers
+To demonstrate both application logic and modern operations engineering, the architecture of this platform is analyzed across two distinct viewpoints: **Pre-Deployment Business Logic Flow** and **Post-Deployment Infrastructure Setup**. 
 
-![Architecture Diagram](./docs/architecture.png)
+Fundamentally, the core software system preserves a strict **3-Tier Architecture** pattern (Presentation, Application/Logic, and Data layers) across both viewpoints. The addition of container layers simply builds a secure, highly reproducible orchestration mesh around them.
+
+
+#### Pre-Deployment Architecture
+This viewpoint focuses on the logical data pipeline and feature execution before infrastructure containerization is introduced. It maps the step-by-step lifecycle of user requests when a student interacts with the platform.
+
+
+![Pre deploy architecture diagram](./docs/architecture-pre-deploy.png)
 
 **Presentation Layer (Angular):** The client-side interface built with Material Design. It handles user interactions, local state persistence (Pause/Resume), and dynamic routing.
 
 **Application Layer (Express.js):** The central business logic hub. It manages API orchestration, JWT verification middleware, and communicates with the Google Generative AI SDK.
 
 **Data Layer (MySQL):** The persistent storage system holding relational data for Users, Courses, and Quiz Results.
+
+#### Post-Deployment Architecture
+This viewpoint illustrates the system runtime layout after container orchestration has been initialized using Docker Compose. It outlines network routing, security parameters, and cross-container communication.
+
+![Post deploy architecture diagram](./docs/architecture-post-deploy.png)
+
+- **Infrastructural Proxy Gateway (Nginx):** The single entry point for all web traffic on standard **Port 80**. It directly serves the compiled Angular frontend layout to users. If a request hits an `/api` path, Nginx acts as a reverse proxy and routes it directly to the Express container behind the scenes.
+- **Core Application Tier (Express API Container):** Houses the Node.js backend logic (`mymahir-express-api`). It is fully hidden from direct internet access within Docker’s internal network mesh, ensuring public users cannot access port 3000 directly.
+- **Relational Persistence Store (MySQL DB Container):** Handles persistent data storage (`mymahir-mysql-db`) on port 3306. It communicates strictly through isolated cross-container bridge wires and saves mock records to a physical database volume so data remains safe across server restarts.
 
 ---
 
@@ -119,6 +136,6 @@ This application is built on a standard 3-Tier Architecture, separating the user
 - [x] Phase 4: Google Gemini AI Integration
 - [x] Phase 5: JWT Authentication & Role-Based Security
 - [x] Phase 6: Dashboard Analytics & Persistence Logic
-- [ ] Phase 7: Docker Containerization (Stretch Goal)
+- [x] Phase 7: Docker Containerization (Stretch Goal)
 
 ---

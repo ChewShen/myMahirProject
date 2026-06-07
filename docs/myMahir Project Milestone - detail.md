@@ -45,9 +45,9 @@
 
 ### Phase 7: Containerization/Hosting (Stretch Goal)
 
-- [ ] Write a `Dockerfile` for the Express backend.  
-- [ ] Write a `Dockerfile` for the Angular frontend.  
-- [ ] Write a `docker-compose.yml` file to link frontend, backend, and a MySQL container.
+- [x] Write a `Dockerfile` for the Express backend.  
+- [x] Write a `Dockerfile` for the Angular frontend.  
+- [x] Write a `docker-compose.yml` file to link frontend, backend, and a MySQL container.
 
 ### Phase 8: AI Tutor Expansion & Interactive Study Kits (V2 Implementation)
 
