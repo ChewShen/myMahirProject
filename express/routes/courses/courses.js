@@ -65,7 +65,7 @@ router.post('/generate-quiz', verifyToken, async (req, res) => {
         if (!courseContent) return res.status(400).json({ success: false, message: "Course content is required" });
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
         const prompt = `
             You are an expert IT Professor. Read the following course content and generate 5 multiple-choice questions based on it.
             Return the response STRICTLY as a JSON array of objects. Do not include markdown formatting like \`\`\`json.
@@ -118,7 +118,7 @@ router.post('/explain-batch', verifyToken, async (req, res) => {
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         // Using the gemini-2.5-flash model matching your configuration
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
         // Since we are enforcing JSON format via prompting to keep dependencies minimal:
         const prompt = `
@@ -173,5 +173,55 @@ router.post('/save-score', verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to save score." });
     }
 });
+
+
+router.post('/study-kit/generate', verifyToken, async (req, res) => {
+    try {
+        const { courseContent } = req.body;
+        if (!courseContent) {
+            return res.status(400).json({ success: false, message: "Course context text parameter is required." });
+        }
+
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+
+        const prompt = `
+            You are an expert instructional designer. Read the following technical course content and process it into a highly structured 3-in-1 Study Kit layout.
+            
+            Return the response STRICTLY as a raw JSON object. Do not wrap the response in markdown formatting like \`\`\`json.
+            The JSON object must hold exactly these root keys:
+            - "moduleSummaries": An array of exactly 3 crisp string bullet points containing the highest-impact key concepts.
+            - "vocabulary": An array of objects mapping technical terms to their definitions. Each object needs exactly "term" and "definition" keys.
+            - "flashcards": An array of at least 5 objects designed for active memory recall. Each object needs exactly "front" (a conceptual question/prompt) and "back" (the concise solution text).
+
+            Course Content Material:
+            "${courseContent}"
+        `;
+
+        const result = await model.generateContent(prompt);
+        const responseText = result.response.text();
+
+        // Safe regex text cleaning array pattern matching your codebase convention
+        const cleanJson = responseText
+            .replace(/```json\n?/gi, '')
+            .replace(/```\n?/g, '')
+            .trim();
+
+        const structuredKit = JSON.parse(cleanJson);
+
+        return res.status(200).json({
+            success: true,
+            data: structuredKit
+        });
+
+    } catch (error) {
+        console.error("Study Kit AI Parsing Failure:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Failed to assemble structured AI study assets.", 
+            error: error.message 
+        });
+    }
+});                     
 
 module.exports = router;

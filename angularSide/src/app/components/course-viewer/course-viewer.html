@@ -1,47 +1,56 @@
 @if (courseData) {
   <div class="bg-background min-h-[80vh] flex items-center justify-center p-margin-mobile md:p-margin-desktop font-body-md text-body-md antialiased">
-    
     <main class="bg-surface-container-lowest w-full max-w-sm rounded-lg shadow-sm hover:shadow-[0px_10px_15px_rgba(0,0,0,0.05)] transition-shadow duration-300 border border-outline-variant/30 flex flex-col p-md gap-gutter">
       
       <header class="flex flex-col gap-base">
-        <h1 class="font-headline-md text-headline-md text-on-surface">{{ courseData.courseName }}</h1>
-        
+        <h1 class="font-headline-md text-headline-md text-on-surface">
+          {{ courseData.courseName }}
+        </h1>
+
         <div class="self-start">
           <span class="inline-flex items-center gap-xs bg-surface-container-high text-primary font-label-sm text-label-sm px-3 py-1 rounded-full">
-            <span class="material-symbols-outlined" style="font-size: 14px;">donut_large</span>
+            <span class="material-symbols-outlined" style="font-size: 14px">donut_large</span>
             {{ courseData.courseStatus }}
           </span>
         </div>
       </header>
-      
+
       <section>
         <p class="font-body-md text-body-md text-on-surface-variant">
           {{ courseData.courseContent }}
         </p>
       </section>
-      
-      <footer class="mt-base">
-        <button (click)="onGenerateQuiz()" [disabled]="isGenerating" class="w-full bg-secondary hover:bg-primary active:scale-[0.98] transition-all duration-200 text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center gap-base group disabled:opacity-50 disabled:cursor-not-allowed">
-          
-          @if(isGenerating) {
+
+      <footer class="mt-base flex flex-col gap-2">
+        <button
+          (click)="onGenerateQuiz()"
+          [disabled]="isGenerating"
+          class="w-full bg-secondary hover:bg-primary active:scale-[0.98] transition-all duration-200 text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center gap-base group disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          @if (isGenerating) {
             Generating questions...
             <span class="material-symbols-outlined animate-spin">autorenew</span>
           } @else {
             Test My Knowledge
             <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
           }
-          
+        </button>
+
+        <button
+          (click)="onOpenStudyKit()"
+          class="w-full px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] transition-all duration-200 text-white font-label-md py-sm rounded-lg flex items-center justify-center gap-1"
+        >
+          <span class="material-symbols-outlined">menu_book</span>
+          <span>Study Mode</span>
         </button>
       </footer>
     </main>
-
   </div>
 } @else {
   <div class="flex items-center justify-center min-h-[80vh] text-on-surface">
     <h3 class="text-xl font-semibold">Loading course from database...</h3>
   </div>
 }
-
 
 @if (isQuizOpen) {
   <div (click)="closeQuiz()" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -64,48 +73,51 @@
               <h3 class="font-headline-sm text-lg font-semibold text-on-surface mb-4">
                 {{ qIndex + 1 }}. {{ q.question }}
               </h3>
-              
+
               <div class="flex flex-col gap-3">
                 @for (opt of q.options; track opt) {
-                  <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:bg-surface-container-high"
-                         [class.border-primary]="selectedAnswers[qIndex] === opt"
-                         [class.bg-surface-container]="selectedAnswers[qIndex] === opt"
-                         [class.border-outline-variant]="selectedAnswers[qIndex] !== opt">
-                    
-                    <input type="radio" 
-                           [name]="'question_' + qIndex" 
-                           [value]="opt" 
-                           [checked]="selectedAnswers[qIndex] === opt"
-                           (change)="selectOption(qIndex, opt)"
-                           class="text-primary focus:ring-primary h-5 w-5">
+                  <label
+                    class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:bg-surface-container-high"
+                    [class.border-primary]="selectedAnswers[qIndex] === opt"
+                    [class.bg-surface-container]="selectedAnswers[qIndex] === opt"
+                    [class.border-outline-variant]="selectedAnswers[qIndex] !== opt"
+                  >
+                    <input
+                      type="radio"
+                      [name]="'question_' + qIndex"
+                      [value]="opt"
+                      [checked]="selectedAnswers[qIndex] === opt"
+                      (change)="selectOption(qIndex, opt)"
+                      class="text-primary focus:ring-primary h-5 w-5"
+                    />
                     <span class="font-body-md text-on-surface-variant">{{ opt }}</span>
                   </label>
                 }
               </div>
             </div>
           }
-          
-          <button (click)="submitQuiz()" 
-                  [disabled]="selectedAnswers.length < 5"
-                  class="w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-4 rounded-lg transition-all mt-4 disabled:opacity-40 disabled:cursor-not-allowed">
+
+          <button
+            (click)="submitQuiz()"
+            [disabled]="selectedAnswers.length < 5"
+            class="w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-4 rounded-lg transition-all mt-4 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
             Submit Answers
           </button>
         </div>
-      }
 
-      @else if (score !== null && isLoadingExplanations) {
+      } @else if (score !== null && isLoadingExplanations) {
         <div class="flex flex-col items-center justify-center py-20 gap-4 text-center">
           <span class="material-symbols-outlined text-6xl text-primary animate-spin">autorenew</span>
           <h3 class="text-xl font-bold text-on-surface mt-2">Compiling Tutor Insights...</h3>
           <p class="text-on-surface-variant text-sm max-w-sm">
-            Your score has been saved to your dashboard. myMahir AI Tutor is currently analyzing your mistakes to build your custom remediation dashboard.
+            Your score has been saved to your dashboard. myMahir AI Tutor is currently analyzing
+            your mistakes to build your custom remediation dashboard.
           </p>
         </div>
-      }
 
-      @else if (score !== null && !isLoadingExplanations) {
+      } @else if (score !== null && !isLoadingExplanations) {
         <div class="flex flex-col gap-6">
-          
           <div class="bg-surface-container-low border border-outline-variant/30 p-6 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
             <span class="material-symbols-outlined text-5xl text-amber-500">emoji_events</span>
             <h2 class="font-headline-lg text-2xl font-bold text-primary">
@@ -118,32 +130,42 @@
 
           <div class="flex flex-col gap-6">
             @for (q of generatedQuiz; track q; let qIndex = $index) {
-              <div class="p-6 rounded-xl border"
-                   [class.border-emerald-500/30]="selectedAnswers[qIndex] === q.correctAnswer"
-                   [class.bg-emerald-500/[0.02]]="selectedAnswers[qIndex] === q.correctAnswer"
-                   [class.border-rose-500/20]="selectedAnswers[qIndex] !== q.correctAnswer"
-                   [class.bg-rose-500/[0.02]]="selectedAnswers[qIndex] !== q.correctAnswer">
-                
+              <div
+                class="p-6 rounded-xl border"
+                [class.border-emerald-500/30]="selectedAnswers[qIndex] === q.correctAnswer"
+                [class.bg-emerald-500/[0.02]]="selectedAnswers[qIndex] === q.correctAnswer"
+                [class.border-rose-500/20]="selectedAnswers[qIndex] !== q.correctAnswer"
+                [class.bg-rose-500/[0.02]]="selectedAnswers[qIndex] !== q.correctAnswer"
+              >
                 <div class="flex items-start gap-3 mb-4">
-                  <span class="material-symbols-outlined mt-0.5 font-bold"
-                        [class.text-emerald-600]="selectedAnswers[qIndex] === q.correctAnswer"
-                        [class.text-rose-600]="selectedAnswers[qIndex] !== q.correctAnswer">
+                  <span
+                    class="material-symbols-outlined mt-0.5 font-bold"
+                    [class.text-emerald-600]="selectedAnswers[qIndex] === q.correctAnswer"
+                    [class.text-rose-600]="selectedAnswers[qIndex] !== q.correctAnswer"
+                  >
                     {{ selectedAnswers[qIndex] === q.correctAnswer ? 'check_circle' : 'cancel' }}
                   </span>
                   <h3 class="font-headline-sm text-base font-semibold text-on-surface">
                     {{ qIndex + 1 }}. {{ q.question }}
                   </h3>
                 </div>
-                
+
                 <div class="flex flex-col gap-3">
                   @for (opt of q.options; track opt) {
-                    <label class="flex items-center gap-3 p-3 rounded-lg border text-sm"
-                           [class.border-emerald-500]="opt === q.correctAnswer"
-                           [class.bg-emerald-500/10]="opt === q.correctAnswer"
-                           [class.border-rose-300]="selectedAnswers[qIndex] === opt && opt !== q.correctAnswer"
-                           [class.bg-rose-500/10]="selectedAnswers[qIndex] === opt && opt !== q.correctAnswer"
-                           [class.opacity-40]="opt !== q.correctAnswer && selectedAnswers[qIndex] !== opt">
-                      <input type="radio" [checked]="selectedAnswers[qIndex] === opt" [disabled]="true" class="h-4 w-4">
+                    <label
+                      class="flex items-center gap-3 p-3 rounded-lg border text-sm"
+                      [class.border-emerald-500]="opt === q.correctAnswer"
+                      [class.bg-emerald-500/10]="opt === q.correctAnswer"
+                      [class.border-rose-300]="selectedAnswers[qIndex] === opt && opt !== q.correctAnswer"
+                      [class.bg-rose-500/10]="selectedAnswers[qIndex] === opt && opt !== q.correctAnswer"
+                      [class.opacity-40]="opt !== q.correctAnswer && selectedAnswers[qIndex] !== opt"
+                    >
+                      <input
+                        type="radio"
+                        [checked]="selectedAnswers[qIndex] === opt"
+                        [disabled]="true"
+                        class="h-4 w-4"
+                      />
                       <span>{{ opt }}</span>
                     </label>
                   }
@@ -160,20 +182,113 @@
                     </p>
                   </div>
                 }
-
               </div>
             }
           </div>
 
           <footer class="border-t border-outline-variant/30 pt-4">
-            <button (click)="closeQuiz()" class="w-full bg-secondary hover:bg-primary text-on-primary font-label-md py-4 rounded-lg transition-all">
+            <button
+              (click)="closeQuiz()"
+              class="w-full bg-secondary hover:bg-primary text-on-primary font-label-md py-4 rounded-lg transition-all"
+            >
               Complete Review & Close Workspace
             </button>
           </footer>
-
         </div>
       }
+    </div>
+  </div>
+}
 
+@if (isStudyKitOpen) {
+  <div (click)="closeStudyKit()" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+    <div (click)="$event.stopPropagation()" class="bg-surface-container-lowest w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-xl shadow-2xl p-6 md:p-8 flex flex-col gap-6">
+      
+      <header class="flex justify-between items-center border-b border-outline-variant/30 pb-4">
+        <h2 class="font-headline-md text-xl font-bold text-indigo-700 flex items-center gap-2">
+          <span class="material-symbols-outlined text-indigo-600">auto_stories</span>
+          <span>myMahir Interactive Study Kit</span>
+        </h2>
+        <button (click)="closeStudyKit()" class="text-on-surface-variant hover:text-error transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+
+      @if (isGeneratingStudyKit) {
+        <div class="flex flex-col items-center justify-center py-24 gap-4 text-center">
+          <span class="material-symbols-outlined text-6xl text-indigo-600 animate-spin">schema</span>
+          <h3 class="text-xl font-bold text-on-surface mt-2">Synthesizing Course Materials...</h3>
+          <p class="text-on-surface-variant text-sm max-w-sm">
+            Please wait while the AI parsed structure automatically populates summaries,
+            vocabulary tables, and interactive recall assets.
+          </p>
+        </div>
+
+      } @else if (studyKitData) {
+        <div class="flex flex-col gap-8">
+          <section class="bg-indigo-50/30 border border-indigo-100 p-5 rounded-xl flex flex-col gap-3">
+            <h3 class="text-md font-bold text-indigo-900 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-indigo-700 text-lg">summarize</span>
+              <span>High-Impact Summary Takeaways</span>
+            </h3>
+            <ul class="list-disc pl-5 text-on-surface-variant text-sm flex flex-col gap-2">
+              @for (sum of studyKitData.moduleSummaries; track sum) {
+                <li class="leading-relaxed font-medium">{{ sum }}</li>
+              }
+            </ul>
+          </section>
+
+          <section class="flex flex-col gap-4">
+            <h3 class="text-md font-bold text-on-surface flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-indigo-600 text-lg">style</span>
+              <span>Memory Recall Cards (Click to flip)</span>
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (card of studyKitData.flashcards; track card; let cIdx = $index) {
+                <div (click)="toggleCardFlip(cIdx)" class="perspective-container cursor-pointer select-none">
+                  <div class="flashcard-inner" [class.card-is-flipped]="flippedCards[cIdx]">
+                    <div class="card-face-front font-semibold text-center text-sm md:text-base">
+                      {{ card.front }}
+                    </div>
+
+                    <div class="card-face-back font-medium text-center text-xs md:text-sm leading-relaxed">
+                      {{ card.back }}
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+
+          <section class="flex flex-col gap-3">
+            <h3 class="text-md font-bold text-on-surface flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-indigo-600 text-lg">menu_book</span>
+              <span>Module Core Dictionary Vocabulary</span>
+            </h3>
+
+            <div class="border border-outline-variant/30 rounded-xl overflow-hidden shadow-xs bg-surface/30">
+              <div class="grid grid-cols-3 bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider p-3">
+                <div class="col-span-1">Technical Term</div>
+                <div class="col-span-2">Precise Core Definition</div>
+              </div>
+
+              <div class="divide-y divide-outline-variant/20">
+                @for (vocab of studyKitData.vocabulary; track vocab) {
+                  <div class="grid grid-cols-3 p-4 gap-4 align-middle text-sm transition-colors hover:bg-surface-container-high/40">
+                    <div class="col-span-1 font-bold text-indigo-950 tracking-tight">
+                      {{ vocab.term }}
+                    </div>
+                    <div class="col-span-2 text-on-surface-variant leading-relaxed">
+                      {{ vocab.definition }}
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </section>
+        </div>
+      }
     </div>
   </div>
 }

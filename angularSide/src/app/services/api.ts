@@ -36,6 +36,12 @@ export class Api {
     });
   }
 
+  generateStudyKit(courseContent: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/courses/study-kit/generate`, {
+      courseContent: courseContent
+    });
+  }
+
 
   login(userData: any) {
     // return this.http.post<any>('/api/login', userData);

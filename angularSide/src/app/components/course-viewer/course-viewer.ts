@@ -24,6 +24,17 @@ export class CourseViewer implements OnInit {
   explanations: any[] = [];
   isLoadingExplanations: boolean = false;
 
+  isStudyKitOpen: boolean = false;
+  isGeneratingStudyKit: boolean = false;
+
+  studyKitData: {
+    moduleSummaries: string[];
+    vocabulary: Array<{ term: string; definition: string }>;
+    flashcards: Array<{ front: string; back: string }>;
+  } | null = null;
+
+  flippedCards: { [key: number]: boolean } = {};
+
   constructor(
     private api: Api,
     private cdr: ChangeDetectorRef,
@@ -198,4 +209,42 @@ export class CourseViewer implements OnInit {
     this.isQuizOpen = false;
     this.cdr.detectChanges();
   }
+
+
+  onOpenStudyKit() {
+    this.isStudyKitOpen = true;
+    
+    // Only call the AI if we haven't generated a study kit for this session yet
+    if (!this.studyKitData) {
+      this.isGeneratingStudyKit = true;
+      this.cdr.detectChanges();
+
+      this.api.generateStudyKit(this.courseData.courseContent).subscribe({
+        next: (res) => {
+          this.studyKitData = res.data;
+          this.isGeneratingStudyKit = false;
+          this.flippedCards = {}; // Clear old card flip records
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Failed to compile study kit elements:", err);
+          this.isGeneratingStudyKit = false;
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.cdr.detectChanges();
+    }
+  }
+
+  toggleCardFlip(index: number) {
+    this.flippedCards[index] = !this.flippedCards[index];
+    this.cdr.detectChanges();
+  }
+
+  closeStudyKit() {
+    this.isStudyKitOpen = false;
+    this.cdr.detectChanges();
+  }
+  
 }
