@@ -108,6 +108,55 @@ router.post('/generate-quiz', verifyToken, async (req, res) => {
     }
 });
 
+// Add this in your routes file alongside router.post('/generate-quiz')
+router.post('/explain-batch', verifyToken, async (req, res) => {
+    try {
+        const { wrongAnswers } = req.body;
+
+        if (!wrongAnswers || !Array.isArray(wrongAnswers) || wrongAnswers.length === 0) {
+            return res.status(400).json({ success: false, message: "No incorrect answers provided for analysis." });
+        }
+
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        // Using the gemini-2.5-flash model matching your configuration
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+        // Since we are enforcing JSON format via prompting to keep dependencies minimal:
+        const prompt = `
+            You are a friendly, encouraging IT tutor. Review the following list of quiz errors made by a student.
+            For each item, provide a clear, constructive 2-3 sentence explanation detailing why the correct answer is right and why the student's selection was incorrect.
+            
+            Return the response STRICTLY as a JSON object with a single root key called "explanations", which contains an array of objects. Do not include markdown formatting like \`\`\`json.
+            Each object in the array must have exactly these keys:
+            - "question": The exact text of the question being evaluated.
+            - "explanation": Your friendly, constructive explanation.
+
+            Incorrect Submission Dataset:
+            ${JSON.stringify(wrongAnswers)}
+        `;
+
+        const result = await model.generateContent(prompt);
+        const responseText = result.response.text();
+
+        // Using your existing cleaning string logic pattern
+        const cleanJson = responseText
+            .replace(/```json\n?/gi, '')
+            .replace(/```\n?/g, '')
+            .trim();
+
+        const structuredData = JSON.parse(cleanJson);
+
+        return res.status(200).json({ 
+            success: true, 
+            data: structuredData.explanations 
+        });
+
+    } catch (error) {
+        console.error("Batch Remediation Error:", error);
+        res.status(500).json({ success: false, message: "Failed to compile batch remediation logs.", error: error.message });
+    }
+});
+
 // SAVE SCORE
 router.post('/save-score', verifyToken, async (req, res) => {
     try {
