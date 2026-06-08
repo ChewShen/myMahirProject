@@ -65,8 +65,7 @@ router.post('/generate-quiz', verifyToken, async (req, res) => {
         if (!courseContent) return res.status(400).json({ success: false, message: "Course content is required" });
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
         const prompt = `
             You are an expert IT Professor. Read the following course content and generate 5 multiple-choice questions based on it.
             Return the response STRICTLY as a JSON array of objects. Do not include markdown formatting like \`\`\`json.
@@ -119,7 +118,7 @@ router.post('/explain-batch', verifyToken, async (req, res) => {
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         // Using the gemini-2.5-flash model matching your configuration
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
         // Since we are enforcing JSON format via prompting to keep dependencies minimal:
         const prompt = `

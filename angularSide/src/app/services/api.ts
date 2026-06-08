@@ -30,6 +30,13 @@ export class Api {
     });
   }
 
+  getBatchExplanations(wrongAnswers: any[]) {
+    return this.http.post<any>(`${this.apiUrl}/courses/explain-batch`, {
+      wrongAnswers: wrongAnswers
+    });
+  }
+
+
   login(userData: any) {
     // return this.http.post<any>('/api/login', userData);
     return this.http.post<any>(`${this.apiUrl}/login`, userData);

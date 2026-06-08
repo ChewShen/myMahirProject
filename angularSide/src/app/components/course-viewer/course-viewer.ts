@@ -21,6 +21,9 @@ export class CourseViewer implements OnInit {
   courseId: string | null = null;
   isLoading = true;
 
+  explanations: any[] = [];
+  isLoadingExplanations: boolean = false;
+
   constructor(
     private api: Api,
     private cdr: ChangeDetectorRef,
@@ -79,6 +82,7 @@ export class CourseViewer implements OnInit {
     this.isGenerating = true;
     this.generatedQuiz = [];
     this.selectedAnswers = [];
+    this.explanations = [];
     this.cdr.detectChanges();
 
     this.api.generateQuiz(this.courseData.courseContent).subscribe({
@@ -117,29 +121,74 @@ export class CourseViewer implements OnInit {
   // 2. When the user clicks "Submit Quiz"
   submitQuiz() {
     let correctCount = 0;
+    const wrongAnswersPayload: any[] = [];
 
-    // Loop through the AI questions and check the user's answers
     this.generatedQuiz.forEach((question, index) => {
-      if (this.selectedAnswers[index] === question.correctAnswer) {
+      const chosenAnswer = this.selectedAnswers[index];
+      if (chosenAnswer === question.correctAnswer) {
         correctCount++;
+      } else {
+        // Build the payload for the AI batch route
+        wrongAnswersPayload.push({
+          question: question.question,
+          studentAnswer: chosenAnswer || 'No answer selected',
+          correctAnswer: question.correctAnswer
+        });
       }
     });
 
-    this.score = correctCount; // Save the final score!
+    this.score = correctCount; // Instantly transition frontend calculations
     this.cdr.detectChanges();
 
     this.api.saveScore(this.courseData.courseId, this.score, this.generatedQuiz.length).subscribe({
       next: (res) => console.log('Score saved successfully!', res),
       error: (err) => console.error('Failed to save score', err),
     });
+
+    // Request for explanation
+    if (wrongAnswersPayload.length > 0) {
+      this.isLoadingExplanations = true;
+      this.cdr.detectChanges();
+
+      this.api.getBatchExplanations(wrongAnswersPayload).subscribe({
+        next: (res) => {
+          this.explanations = res.data; // Store returned Postman-like array matches
+          this.isLoadingExplanations = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('AI Tutor remediation fetch failed:', err);
+          this.isLoadingExplanations = false;
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.isLoadingExplanations = false; // Guard edge-case for 100% perfect scores
+    }
   }
 
+  getExplanationByIndex(index: number): string | null {
+    if (this.explanations && this.explanations[index]) {
+      return this.explanations[index].explanation;
+    }
+    
+    // Fallback attempt: if array positions shifted, look for a matching question string
+    if (this.generatedQuiz[index]) {
+      const targetQuestion = this.generatedQuiz[index].question;
+      const match = this.explanations.find(item => item.question === targetQuestion);
+      return match ? match.explanation : null;
+    }
+    
+    return null;
+  }
+  
   // 3. When the user closes the pop-up
   closeQuiz() {
     if (this.score !== null) {
       // 1. If they already submitted and got a score, completely reset it for next time.
       this.generatedQuiz = [];
       this.selectedAnswers = [];
+      this.explanations = [];
       this.score = null;
 
       const saveKey = `quiz_progress_${this.courseId}`;

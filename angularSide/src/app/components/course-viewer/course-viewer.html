@@ -44,34 +44,29 @@
 
 
 @if (isQuizOpen) {
-
   <div (click)="closeQuiz()" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-    
-    <div (click)="$event.stopPropagation()" class="bg-surface-container-lowest w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl p-6 md:p-8 flex flex-col gap-8">
+    <div (click)="$event.stopPropagation()" class="bg-surface-container-lowest w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl p-6 md:p-8 flex flex-col gap-6">
       
       <header class="flex justify-between items-center border-b border-outline-variant/30 pb-4">
         <h2 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
           <span class="material-symbols-outlined">psychology</span>
-          Quiz Time!
+          Quiz Workspace
         </h2>
-        
         <button (click)="closeQuiz()" class="text-on-surface-variant hover:text-error transition-colors">
           <span class="material-symbols-outlined">close</span>
         </button>
       </header>
 
       @if (score === null) {
-        <div class="flex flex-col gap-8">
-          
-          @for (q of generatedQuiz; track $index; let qIndex = $index) {
+        <div class="flex flex-col gap-6">
+          @for (q of generatedQuiz; track q; let qIndex = $index) {
             <div class="bg-surface/50 p-6 rounded-lg border border-outline-variant/20">
-              <h3 class="font-headline-sm text-headline-sm text-on-surface mb-4">
+              <h3 class="font-headline-sm text-lg font-semibold text-on-surface mb-4">
                 {{ qIndex + 1 }}. {{ q.question }}
               </h3>
               
               <div class="flex flex-col gap-3">
                 @for (opt of q.options; track opt) {
-                  
                   <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:bg-surface-container-high"
                          [class.border-primary]="selectedAnswers[qIndex] === opt"
                          [class.bg-surface-container]="selectedAnswers[qIndex] === opt"
@@ -83,7 +78,7 @@
                            [checked]="selectedAnswers[qIndex] === opt"
                            (change)="selectOption(qIndex, opt)"
                            class="text-primary focus:ring-primary h-5 w-5">
-                    <span class="font-body-md text-body-md text-on-surface-variant">{{ opt }}</span>
+                    <span class="font-body-md text-on-surface-variant">{{ opt }}</span>
                   </label>
                 }
               </div>
@@ -92,23 +87,90 @@
           
           <button (click)="submitQuiz()" 
                   [disabled]="selectedAnswers.length < 5"
-                  class="w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4">
+                  class="w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-4 rounded-lg transition-all mt-4 disabled:opacity-40 disabled:cursor-not-allowed">
             Submit Answers
           </button>
         </div>
+      }
 
-      } @else {
-        <div class="flex flex-col items-center justify-center py-12 gap-4 text-center">
-          <span class="material-symbols-outlined text-6xl text-on-tertiary-container mb-2">emoji_events</span>
-          <h2 class="font-display-lg text-display-lg text-primary">
-            {{ score }} / {{ generatedQuiz.length }}
-          </h2>
-          <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
-            Excellent work! Your AI-generated assessment is complete. Your progress can now be saved to your dashboard.
+      @else if (score !== null && isLoadingExplanations) {
+        <div class="flex flex-col items-center justify-center py-20 gap-4 text-center">
+          <span class="material-symbols-outlined text-6xl text-primary animate-spin">autorenew</span>
+          <h3 class="text-xl font-bold text-on-surface mt-2">Compiling Tutor Insights...</h3>
+          <p class="text-on-surface-variant text-sm max-w-sm">
+            Your score has been saved to your dashboard. myMahir AI Tutor is currently analyzing your mistakes to build your custom remediation dashboard.
           </p>
-          <button (click)="closeQuiz()" class="mt-8 bg-secondary hover:bg-primary text-on-primary px-8 py-3 rounded-lg font-label-md transition-colors">
-            Return to Course
-          </button>
+        </div>
+      }
+
+      @else if (score !== null && !isLoadingExplanations) {
+        <div class="flex flex-col gap-6">
+          
+          <div class="bg-surface-container-low border border-outline-variant/30 p-6 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
+            <span class="material-symbols-outlined text-5xl text-amber-500">emoji_events</span>
+            <h2 class="font-headline-lg text-2xl font-bold text-primary">
+              Your Score: {{ score }} / {{ generatedQuiz.length }}
+            </h2>
+            <p class="text-on-surface-variant text-sm max-w-md">
+              Review your customized feedback panel down below before returning to your dashboard workspace module.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-6">
+            @for (q of generatedQuiz; track q; let qIndex = $index) {
+              <div class="p-6 rounded-xl border"
+                   [class.border-emerald-500/30]="selectedAnswers[qIndex] === q.correctAnswer"
+                   [class.bg-emerald-500/[0.02]]="selectedAnswers[qIndex] === q.correctAnswer"
+                   [class.border-rose-500/20]="selectedAnswers[qIndex] !== q.correctAnswer"
+                   [class.bg-rose-500/[0.02]]="selectedAnswers[qIndex] !== q.correctAnswer">
+                
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="material-symbols-outlined mt-0.5 font-bold"
+                        [class.text-emerald-600]="selectedAnswers[qIndex] === q.correctAnswer"
+                        [class.text-rose-600]="selectedAnswers[qIndex] !== q.correctAnswer">
+                    {{ selectedAnswers[qIndex] === q.correctAnswer ? 'check_circle' : 'cancel' }}
+                  </span>
+                  <h3 class="font-headline-sm text-base font-semibold text-on-surface">
+                    {{ qIndex + 1 }}. {{ q.question }}
+                  </h3>
+                </div>
+                
+                <div class="flex flex-col gap-3">
+                  @for (opt of q.options; track opt) {
+                    <label class="flex items-center gap-3 p-3 rounded-lg border text-sm"
+                           [class.border-emerald-500]="opt === q.correctAnswer"
+                           [class.bg-emerald-500/10]="opt === q.correctAnswer"
+                           [class.border-rose-300]="selectedAnswers[qIndex] === opt && opt !== q.correctAnswer"
+                           [class.bg-rose-500/10]="selectedAnswers[qIndex] === opt && opt !== q.correctAnswer"
+                           [class.opacity-40]="opt !== q.correctAnswer && selectedAnswers[qIndex] !== opt">
+                      <input type="radio" [checked]="selectedAnswers[qIndex] === opt" [disabled]="true" class="h-4 w-4">
+                      <span>{{ opt }}</span>
+                    </label>
+                  }
+                </div>
+
+                @if (selectedAnswers[qIndex] !== q.correctAnswer) {
+                  <div class="mt-4 p-4 rounded-lg border border-teal-500/20 bg-teal-50/50 text-teal-950 text-sm flex flex-col gap-1">
+                    <div class="flex items-center gap-1.5 font-semibold text-teal-800">
+                      <span class="material-symbols-outlined text-base">wb_incandescent</span>
+                      <span>myMahir Tutor Insight</span>
+                    </div>
+                    <p class="leading-relaxed">
+                      {{ getExplanationByIndex(qIndex) || 'Review the context differences between your submitted answer and the true engineering solution.' }}
+                    </p>
+                  </div>
+                }
+
+              </div>
+            }
+          </div>
+
+          <footer class="border-t border-outline-variant/30 pt-4">
+            <button (click)="closeQuiz()" class="w-full bg-secondary hover:bg-primary text-on-primary font-label-md py-4 rounded-lg transition-all">
+              Complete Review & Close Workspace
+            </button>
+          </footer>
+
         </div>
       }
 
