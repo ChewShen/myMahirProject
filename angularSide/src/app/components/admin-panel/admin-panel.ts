@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { Api } from '../../services/api';
+import { AdminApi } from '../../services/admin-api';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Ui } from '../../services/ui';
 
@@ -21,7 +21,7 @@ export class AdminPanel {
   isSubmitting = false;
 
   constructor(
-    private api:Api, 
+    private api: AdminApi, 
     private cdr: ChangeDetectorRef,
     private fb : FormBuilder,
     private uiservice: Ui

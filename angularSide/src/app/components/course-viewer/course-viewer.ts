@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Api } from '../../services/api';
+import { CoursesApi } from '../../services/courses-api';
 import { ChangeDetectorRef } from '@angular/core';
 import { SharedModule } from '../../shared/shared-module';
 import { ActivatedRoute } from '@angular/router';
@@ -36,7 +36,7 @@ export class CourseViewer implements OnInit {
   flippedCards: { [key: number]: boolean } = {};
   
   constructor(
-    private api: Api,
+    private api: CoursesApi,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private data: Data,

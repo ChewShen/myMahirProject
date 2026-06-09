@@ -1,7 +1,7 @@
+import { AuthApi } from './../../services/auth-api';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { SharedModule } from '../../shared/shared-module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Api } from '../../services/api';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Data } from '../../services/data';
@@ -21,7 +21,7 @@ export class Auth {
 
   constructor(
     private fb: FormBuilder, 
-    private api: Api, 
+    private api: AuthApi, 
     private router: Router,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
