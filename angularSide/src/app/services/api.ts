@@ -57,7 +57,7 @@ export class Api {
   }
 
   createCourse(courseData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}admin/courses`, courseData);
+    return this.http.post<any>(`${this.apiUrl}/                     admin/courses`, courseData);
   }
 
   getCourseById(id: string | number): Observable<any> {

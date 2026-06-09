@@ -139,3 +139,63 @@ This viewpoint illustrates the system runtime layout after container orchestrati
 - [x] Phase 7: Docker Containerization (Stretch Goal)
 
 ---
+
+## 🧪 Automated Integration Testing Framework
+
+The backend architecture incorporates a comprehensive test-driven validation layer built using **Jest** as the core test runner alongside **Supertest** for decoupled HTTP assertions. 
+
+Integration tests are executed programmatically in an isolated memory stream, allowing structural validation to run simultaneously alongside the live Express development engine without network socket collisions or port resource deadlocks.
+
+### 📁 Test Architecture Breakdown
+The test suite mirrors the application's microservice router layout to isolate concerns and optimize execution workflows:
+* `tests/auth.test.js` — Validates student registration loops, cryptographic password hashing invariants, upstream guard conditions, and database key constraints (`ER_DUP_ENTRY`).
+* `tests/course.test.js` — Asserts performance parameters for high-impact relational SQL queries (`JOIN` lookups) and validates dynamic regex sanitation layers parsing unstructured live **Google Gemini LLM** JSON arrays.
+* `tests/admin.test.js` — Enforces strict role-based access control policies (`verifyToken` and `requireAdmin` middleware blocks) and tests data integrity metrics during cascade record mutations.
+
+---
+
+### 📊 Automated Test Execution Log
+
+```
+ PASS  tests/auth.test.js
+ 🔐 Authentication Flow Integration Testing
+   POST /api/register
+     ✓ should successfully register a brand new active student account (170 ms)
+     ✓ should return 400 Bad Request when attempting to register a duplicate email (66 ms)
+   POST /api/login
+     ✓ should successfully authenticate user and return a signed JSON Web Token (JWT) (64 ms)
+     ✓ should drop request with 400 Bad Request if fields are blank (Upstream Guard Trigger) (9 ms)
+     ✓ should return 401 Unauthorized for incorrect passwords (59 ms)
+   POST /api/setup-admin
+     ✓ should reject provisioning if the devKey parameter is missing or wrong (7 ms)
+
+ PASS  tests/course.test.js
+ Course & AI Tutor Workspace Integration Suite
+   verifyToken Global Middleware Check
+     ✓ should block anonymous traffic with a 401/403 status if token header is absent (40 ms)
+   RESTful Database Routes
+     ✓ GET /api/courses -> should fetch all available rows inside table database (21 ms)
+     ✓ GET /api/courses/:id -> should successfully look up and return a unique course by ID (21 ms)
+     ✓ POST /api/courses/save-score -> should log student assessment results into schema (23 ms)
+     ✓ GET /api/courses/my-scores -> should parse SQL JOIN payload and return active records (23 ms)
+   Deep AI Microservice Routes (Live Loop)
+     ✓ POST /api/courses/generate-quiz -> should process context strings into valid structures (1795 ms)
+     ✓ POST /api/courses/study-kit/generate -> should parse 3-in-1 instructional content arrays (1829 ms)
+
+ PASS  tests/admin.test.js
+ Admin Dashboard & CRUD Operations Integration Suite
+   Endpoint Authorization Layer Enforcement
+     ✓ GET /api/admin/scores -> should reject requests if authorization token header is absent (24 ms)
+     ✓ POST /api/admin/courses -> should block student access profiles with 403 Forbidden (11 ms)
+   Course Creation & Lifecycle (Admin Verified)
+     ✓ POST /api/admin/courses -> should allow admin to publish a new active course option (17 ms)
+   Cascade Deletions and Content Mutations
+     ✓ PUT /api/admin/courses/:id -> should successfully commit content column updates (26 ms)
+     ✓ DELETE /api/admin/courses/:id -> should execute cascading row deletion safely (35 ms)
+
+Test Suites: 3 passed, 3 total
+Tests:       18 passed, 18 total
+Snapshots:   0 total
+Time:        6.644 s
+Ran all test suites sequentially.
+```

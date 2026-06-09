@@ -30,6 +30,15 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        // 🚀 Add this guard condition upfront:
+        if (!email || !password) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Email and password are required fields." 
+            });
+        }
+        
+
         const [users] = await db.query('SELECT * FROM users WHERE userEmail = ?', [email]);
         if (users.length === 0) {
             return res.status(401).json({ success: false, message: "Invalid email or password." });

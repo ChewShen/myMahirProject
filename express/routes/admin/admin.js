@@ -4,6 +4,10 @@ const db = require('../../config/db');
 
 const verifyToken = require('../../middleware/auth');
 const requireAdmin = require('../../middleware/requireAdmin'); 
+
+router.use(verifyToken);
+router.use(requireAdmin);
+
 // ROUTE 2: Get all student scores for the dashboard
 router.get('/scores', async (req, res) => {
     try {
