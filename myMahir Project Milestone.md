@@ -53,12 +53,12 @@
 **Focuses on moving the AI from an assessor (grading tool) into an active, helpful learning tutor.**
 
 Feature 1: Smart Remediation Loop ("Why Did I Get This Wrong?")
-  - [ ] Backend: Build a POST /api/quiz/explain route that receives an incorrect answer selection and queries Gemini to generate a constructive, contextual explanation.
-  - [ ] Frontend (Teal/Mint UI Accent Theme): Code soft-teal background boxes or emerald-bordered panels to display constructive AI hints when a student misses a question.
+  - [x] Backend: Build a POST /api/quiz/explain route that receives an incorrect answer selection and queries Gemini to generate a constructive, contextual explanation.
+  - [x] Frontend (Teal/Mint UI Accent Theme): Code soft-teal background boxes or emerald-bordered panels to display constructive AI hints when a student misses a question.
   
 Feature 2: Dynamic Learning Study Kits
-- [ ] Backend: Expand the Gemini prompt architecture to output a structured JSON array containing 3-bullet point module summaries, key vocabulary definitions, and flashcards.
-- [ ] Frontend (Indigo/Violet UI Accent Theme): Build interactive digital Flashcards (flip-to-reveal) using Angular Material tabs/cards accented in deep violet to distinguish the premium AI-tutor workspace.
+- [x] Backend: Expand the Gemini prompt architecture to output a structured JSON array containing 3-bullet point module summaries, key vocabulary definitions, and flashcards.
+- [x] Frontend (Indigo/Violet UI Accent Theme): Build interactive digital Flashcards (flip-to-reveal) using Angular Material tabs/cards accented in deep violet to distinguish the premium AI-tutor workspace.
 
 ### Phase 9: Automated Curriculum Parsing & Serverless Storage (V3 Stretch Goal)
 **Takes the structural burden off educators by building out an automated ingestion engine.**

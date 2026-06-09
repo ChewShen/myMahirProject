@@ -34,7 +34,7 @@ export class CourseViewer implements OnInit {
   } | null = null;
 
   flippedCards: { [key: number]: boolean } = {};
-
+  
   constructor(
     private api: Api,
     private cdr: ChangeDetectorRef,
@@ -236,8 +236,11 @@ export class CourseViewer implements OnInit {
       this.cdr.detectChanges();
     }
   }
+  
 
   toggleCardFlip(index: number) {
+    this.playFlipSound();
+
     this.flippedCards[index] = !this.flippedCards[index];
     this.cdr.detectChanges();
   }
@@ -245,6 +248,18 @@ export class CourseViewer implements OnInit {
   closeStudyKit() {
     this.isStudyKitOpen = false;
     this.cdr.detectChanges();
+  }
+
+  private flipSound = new Audio('flipcard.mp3');
+
+  private playFlipSound() {
+    try {
+      this.flipSound.currentTime = 0; // Rewind to start in case user clicks fast
+      this.flipSound.volume = 0.4;     // Soften volume to 40% so it's pleasant
+      this.flipSound.play();
+    } catch (e) {
+      console.log("Audio play blocked by browser autoplay settings:", e);
+    }
   }
   
 }
