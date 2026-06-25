@@ -16,9 +16,9 @@
       </header>
 
       <section>
-        <p class="font-body-md text-body-md text-on-surface-variant">
-          {{ courseData.courseContent }}
-        </p>
+        <div class="markdown-container text-on-surface leading-relaxed" 
+            [innerHTML]="courseData.courseContent | markdown">
+        </div>
       </section>
 
       <footer class="mt-base flex flex-col gap-2">

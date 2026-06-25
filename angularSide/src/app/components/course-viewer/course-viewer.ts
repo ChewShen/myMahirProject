@@ -1,3 +1,4 @@
+import { MarkdownPipe } from './../../shared/markdown-pipe';
 import { Component, OnInit } from '@angular/core';
 import { CoursesApi } from '../../services/courses-api';
 import { ChangeDetectorRef } from '@angular/core';
@@ -6,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Data } from '../../services/data';
 @Component({
   selector: 'app-course-viewer',
-  imports: [...SharedModule],
+  imports: [...SharedModule,MarkdownPipe],
   templateUrl: './course-viewer.html',
   styleUrl: './course-viewer.css',
 })
