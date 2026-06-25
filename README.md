@@ -106,63 +106,109 @@ This viewpoint illustrates the system runtime layout after container orchestrati
 ## Setup and Installation
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
-- MySQL Server (I am using MySQL Benchmark)
+- MySQL Server 8.0
 - Google Gemini API Key
 
 ### 1. Database Configuration
+
 1. Create a MySQL database named `elearning-db`.
-2. Run the SQL scripts located in the `/sql` directory to initialize the `users`, `courses`, and `quiz` tables.
+2. Run the SQL scripts located in the [`/sql`](sql/) directory to initialize the schema and seed demo user accounts.
 
-### 2. Backend Environment
-1. Navigate to the `/express` directory.
-2. Run `npm install`.
-3. Create a `.env` file with the following variables:
-   ```env
-   PORT=3000
-   DB_HOST=localhost
-   DB_USER=your_mysql_username
-   DB_PASSWORD=your_mysql_password
-   DB_NAME=elearning-db
-   JWT_SECRET=your_secret_key
-   DEV_SECRET_KEY=your_secret_key
-   GEMINI_API_KEY=your_google_gemini_key
-   ```
-4. Start the server using `npm start`.
+### 2. Backend Setup
 
-### 3. Frontend Environment
-1. Navigate to the `/angularSide` directory.
-2. Run `npm install`.
-3. Start the development server using `ng serve`.
-4. Access the application at `http://localhost:4200`.
+```bash
+cd express
+npm install
+```
 
-*Keep the both server running, do not close it
+Create a `.env` file in the `/express` directory:
+
+```env
+PORT=3000
+DB_HOST=localhost
+DB_USER=your_mysql_username
+DB_PASSWORD=your_mysql_password
+DB_NAME=elearning-db
+JWT_SECRET=your_secret_key
+DEV_SECRET_KEY=your_dev_secret_key
+GEMINI_API_KEY=your_google_gemini_key
+```
+
+Start the server:
+
+```bash
+npm start        # Production
+npm run dev      # Development (with nodemon auto-reload)
+```
+
+### 3. Frontend Setup
+
+```bash
+cd angularSide
+npm install
+ng serve
+```
+
+Access the application at `http://localhost:4200`.
+
+> **Note:** Both the Express backend and Angular dev server must be running simultaneously.
+
+### 4. Docker Deployment (Alternative)
+
+To run the entire stack in containers:
+
+```bash
+# Create a .env file in the project root with the variables listed above
+# Then build and launch all services:
+docker-compose up --build
+```
+
+Access the application at `http://localhost` (Port 80 via Nginx).
 
 ---
 
-## 🗺️ Project Roadmap Status
+## API Reference
 
-- [x] Phase 1: Architecture & Database Design
-- [x] Phase 2: Express.js & MySQL Integration
-- [x] Phase 3: Angular UI & Material Design
-- [x] Phase 4: Google Gemini AI Integration
-- [x] Phase 5: JWT Authentication & Role-Based Security
-- [x] Phase 6: Dashboard Analytics & Persistence Logic
-- [x] Phase 7: Docker Containerization (Stretch Goal)
+### Authentication (`/api`)
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/register` | Public | Register a new student account |
+| POST | `/login` | Public | Authenticate and receive a signed JWT |
+| POST | `/setup-admin` | DevKey | Provision an admin account |
+
+### Courses (`/api/courses`)
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/` | JWT | List all available courses |
+| GET | `/:id` | JWT | Get a specific course by ID |
+| GET | `/my-scores` | JWT | Get the logged-in student's quiz history |
+| POST | `/generate-quiz` | JWT | Generate an AI quiz from course content |
+| POST | `/explain-batch` | JWT | Get AI explanations for incorrect answers |
+| POST | `/save-score` | JWT | Save a quiz result to the database |
+| POST | `/study-kit/generate` | JWT | Generate AI study materials (summaries, vocab, flashcards) |
+
+### Admin (`/api/admin`)
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/scores` | JWT + Admin | View all student scores across the platform |
+| POST | `/courses` | JWT + Admin | Publish a new course |
+| PUT | `/courses/:id` | JWT + Admin | Update an existing course |
+| DELETE | `/courses/:id` | JWT + Admin | Delete a course with cascading quiz cleanup |
+| POST | `/courses/upload` | JWT + Admin | Upload a PDF/DOCX for AI-powered curriculum parsing |
+| POST | `/courses/bulk` | JWT + Admin | Bulk save AI-generated courses after review |
 
 ---
 
 ## 🧪 Automated Integration Testing Framework
 
-The backend architecture incorporates a comprehensive test-driven validation layer built using **Jest** as the core test runner alongside **Supertest** for decoupled HTTP assertions. 
+The backend incorporates a test-driven validation layer using **Jest** and **Supertest**. Tests run in an isolated server instance to avoid port conflicts with the live development server.
 
-Integration tests are executed programmatically in an isolated memory stream, allowing structural validation to run simultaneously alongside the live Express development engine without network socket collisions or port resource deadlocks.
-
-### 📁 Test Architecture Breakdown
-The test suite mirrors the application's microservice router layout to isolate concerns and optimize execution workflows:
-* `tests/auth.test.js` — Validates student registration loops, cryptographic password hashing invariants, upstream guard conditions, and database key constraints (`ER_DUP_ENTRY`).
-* `tests/course.test.js` — Asserts performance parameters for high-impact relational SQL queries (`JOIN` lookups) and validates dynamic regex sanitation layers parsing unstructured live **Google Gemini LLM** JSON arrays.
-* `tests/admin.test.js` — Enforces strict role-based access control policies (`verifyToken` and `requireAdmin` middleware blocks) and tests data integrity metrics during cascade record mutations.
+### Test Architecture
+- `tests/auth.test.js` — Registration flows, bcrypt hashing, JWT generation, duplicate entry guards, admin provisioning.
+- `tests/course.test.js` — Token middleware enforcement, SQL JOIN queries, and live Gemini AI response parsing.
+- `tests/admin.test.js` — RBAC policy enforcement, course CRUD lifecycle, and cascading deletion integrity.
 
 ---
 
