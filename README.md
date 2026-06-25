@@ -2,27 +2,39 @@
 
 Repository for **myMahir Full Stack Developer Track (Cohort 2)** capstone project.
 
-This project is a web-based learning platform that combines automated, AI-driven evaluations with dynamic content delivery to expedite the learning process.
-
-This approach uses automatically generated tests rather than having teachers create them by hand. After a student completes a module, the Express.js backend securely connects to an external AI API to quickly create multiple-choice, contextual quizzes based on the precise content they just read.
+Full-stack, AI-powered learning platform that combines automated assessments, intelligent tutoring, and dynamic content delivery to accelerate the learning process. Instead of relying on hand-crafted tests, the platform leverages Google Gemini AI to generate contextual quizzes, constructive explanations, and structured study materials — all in real time.
 
 ## Key Features
 
-- **AI-Driven Assessment:** Real-time generation of interactive quizzes using Google Gemini AI, ensuring unique questions for every learning session.
-- **Secure Authentication:** Full JWT (JSON Web Token) implementation for secure user sessions and password hashing using Bcrypt.
-- **Role-Based Access Control (RBAC):** Dedicated Student and Admin views with specialized Angular Route Guards to protect administrative dashboards.
-- **Admin Analytics:** Comprehensive dashboard for teachers to monitor student performance and view historical quiz results across the platform.
-- **State Persistence:** A sophisticated "Pause & Resume" system using Local Storage that allows students to resume unfinished quizzes even after closing their browser.
-- **3-Tier Architecture:** A clean separation of concerns between the Angular frontend, Express backend, and MySQL database layer.
+- **AI-Driven Assessment**  
+Real-time generation of multiple-choice quizzes using Google Gemini AI, producing unique questions for every learning session.
+- **Smart Remediation Loop**  
+After quiz submission, incorrect answers are automatically sent to the AI for constructive, per-question explanations — turning the AI from an assessor into an active tutor.
+- **Dynamic Study Kits**  
+AI-generated 3-in-1 learning packs containing module summaries, vocabulary glossaries, and interactive flip-to-reveal flashcards.
+- **Quiz Pause & Resume**  
+A Local Storage persistence system that saves quiz progress in real time, allowing students to resume unfinished quizzes even after closing their browser.
+- **Secure Authentication**  
+Full JWT implementation with bcrypt password hashing, HTTP interceptors for automatic token injection, and secure admin provisioning.
+- **Role-Based Access Control (RBAC)**  
+Dedicated Student and Admin views with dual-layer protection: Angular Route Guards on the frontend and Express middleware enforcement on the backend.
+- **Automated Curriculum Parsing**  
+Drag-and-drop PDF/DOCX upload pipeline that converts documents to Markdown, feeds them to AI for structuring, and allows admin review before publishing.
 
 --- 
 
 ## Tech Stack
 
-- **Frontend:** Angular & Angular Material (UI Components), Tailwind
-- **Backend:** Express.js (Node.js)
-- **Database:** MySQL
-- **Integrations:** External AI API (Gemini) & JWT Authentication
+| Layer | Technology |
+|---|---|
+| **Frontend** | Angular 21, Angular Material, TypeScript 5.9, RxJS, marked (Markdown rendering) |
+| **Backend** | Express.js 5, Node.js 20 |
+| **Database** | MySQL 8.0 (InnoDB) |
+| **AI Integration** | Google Gemini API via `@google/generative-ai` SDK |
+| **Authentication** | JSON Web Tokens (jsonwebtoken), bcrypt |
+| **File Processing** | Multer (upload handling), markitdown-js (PDF/DOCX → Markdown conversion) |
+| **Testing** | Jest + Supertest (backend integration tests) |
+| **DevOps** | Docker, Docker Compose, Nginx (reverse proxy) |
 
 ---
 
@@ -99,7 +111,7 @@ This viewpoint illustrates the system runtime layout after container orchestrati
 - Google Gemini API Key
 
 ### 1. Database Configuration
-1. Create a MySQL database connection.
+1. Create a MySQL database named `elearning-db`.
 2. Run the SQL scripts located in the `/sql` directory to initialize the `users`, `courses`, and `quiz` tables.
 
 ### 2. Backend Environment
