@@ -1,5 +1,33 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
+
+jest.mock('uuid', () => ({ v4: () => 'fake-test-uuid-1234' }));
+
+jest.mock('markitdown-js', () => {
+  return {
+    default: class MockMarkitdown {
+      async convert() {
+        return { textContent: '# Mock Document Content' };
+      }
+    }
+  };
+});
+jest.mock('@google/generative-ai', () => {
+  return {
+    GoogleGenerativeAI: class {
+      getGenerativeModel() {
+        return {
+          generateContent: async () => ({
+            response: {
+              text: () => JSON.stringify([{ title: "Mock AI Course", content: "Mock parsed content" }])
+            }
+          })
+        };
+      }
+    }
+  };
+});
+
 const app = require('../app'); 
 const db = require('../config/db');
 

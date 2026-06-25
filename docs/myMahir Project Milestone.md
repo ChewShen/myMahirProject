@@ -62,6 +62,6 @@ Feature 2: Dynamic Learning Study Kits
 
 ### Phase 9: Automated Curriculum Parsing & Serverless Storage (V3 Stretch Goal)
 **Takes the structural burden off educators by building out an automated ingestion engine.**
-- [ ] Admin Document Upload Interface: Create a seamless drag-and-drop file upload zone in the Admin dashboard using FormData to accept raw PDFs and DOCX documents.
-- [ ] Document Conversion Pipeline: Incorporate Microsoft markitdown (or a node-equivalent parser) to programmatically convert incoming documents into structured Markdown text.
-- [ ] Automated Instructional Chunking: Prompt Gemini to read the newly generated Markdown chapter, divide it into logically sized sub-modules, and save the individual chunks cleanly into the MySQL courses table.
+- [x] Admin Document Upload Interface: Create a seamless drag-and-drop file upload zone in the Admin dashboard using FormData to accept raw PDFs and DOCX documents.
+- [x] Document Conversion Pipeline: Incorporate Microsoft markitdown (or a node-equivalent parser) to programmatically convert incoming documents into structured Markdown text.
+- [x] Automated Instructional Chunking: Prompt Gemini to read the newly generated Markdown chapter, divide it into logically sized sub-modules, and save the individual chunks cleanly into the MySQL courses table.

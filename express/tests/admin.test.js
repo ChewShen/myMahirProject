@@ -1,5 +1,32 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
+jest.mock('uuid', () => ({ v4: () => 'fake-test-uuid-1234' }));
+
+jest.mock('markitdown-js', () => {
+  return {
+    default: class MockMarkitdown {
+      async convert() {
+        return { textContent: '# Mock Document Content' };
+      }
+    }
+  };
+});
+jest.mock('@google/generative-ai', () => {
+  return {
+    GoogleGenerativeAI: class {
+      getGenerativeModel() {
+        return {
+          generateContent: async () => ({
+            response: {
+              text: () => JSON.stringify([{ title: "Mock AI Course", content: "Mock parsed content" }])
+            }
+          })
+        };
+      }
+    }
+  };
+});
+
 const app = require('../app');
 const db = require('../config/db');
 
@@ -117,4 +144,58 @@ describe('🛠️ Admin Dashboard & CRUD Operations Integration Suite', () => {
       expect(res.body.message).toContain('deleted');
     });
   });
+
+  describe('📄 Automated Curriculum Parsing (V3 Feature)', () => {
+    
+    it('POST /api/admin/courses/upload -> should parse document and return AI structured courses', async () => {
+      // Create a fake file in memory
+      const mockFileBuffer = Buffer.from('dummy pdf content');
+      
+      const res = await request(app)
+        .post('/api/admin/courses/upload')
+        .set('Authorization', `Bearer ${validAdminToken}`)
+        // Supertest allows us to simulate a file upload using .attach()
+        .attach('document', mockFileBuffer, 'syllabus.pdf'); 
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.success).toBe(true);
+      // Verify that our Mocked AI response was successfully passed down to the client
+      expect(res.body.data[0].title).toBe('Mock AI Course'); 
+    });
+
+    it('POST /api/admin/courses/bulk -> should successfully bulk insert approved courses', async () => {
+      const payload = {
+        courses: [
+          { title: "AI Generated Module 1", content: "Markdown content 1" },
+          { title: "AI Generated Module 2", content: "Markdown content 2" }
+        ]
+      };
+
+      const res = await request(app)
+        .post('/api/admin/courses/bulk')
+        .set('Authorization', `Bearer ${validAdminToken}`)
+        .send(payload);
+
+      expect(res.statusCode).toBe(201);
+      expect(res.body.success).toBe(true);
+      expect(res.body.message).toContain('saved successfully');
+
+      // 3. DATABASE VERIFICATION: Ensure the courses were actually written to MySQL
+      const [rows] = await db.query('SELECT * FROM courses WHERE courseName LIKE "AI Generated Module%"');
+      expect(rows.length).toBe(2);
+      
+      // Cleanup the test data
+      await db.query('DELETE FROM courses WHERE courseName LIKE "AI Generated Module%"');
+    });
+    
+    it('POST /api/admin/courses/upload -> should reject requests with no file attached', async () => {
+      const res = await request(app)
+        .post('/api/admin/courses/upload')
+        .set('Authorization', `Bearer ${validAdminToken}`);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.message).toContain('No file uploaded');
+    });
+  });
 });
+
