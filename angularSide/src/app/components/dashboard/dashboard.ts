@@ -1,5 +1,5 @@
+import { CoursesApi } from './../../services/courses-api';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Api } from '../../services/api';
 import { SharedModule } from '../../shared/shared-module';
 import { RouterModule } from '@angular/router';
 import { Data } from '../../services/data';
@@ -16,7 +16,7 @@ export class Dashboard implements OnInit {
   user: any = null;
 
   constructor(
-    private apiService: Api,
+    private apiService: CoursesApi,
     private cdr: ChangeDetectorRef,
     private data: Data
   ) {}

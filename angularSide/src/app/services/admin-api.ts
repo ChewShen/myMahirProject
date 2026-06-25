@@ -32,4 +32,16 @@ export class AdminApi {
   deleteCourse(courseId: string | number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/courses/${courseId}`);
   }
+
+  uploadCurriculum(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('document', file);
+    // Angular HttpClient automatically sets the correct multipart/form-data headers when you pass FormData
+    return this.http.post<any>(`${this.apiUrl}/courses/upload`, formData);
+  }
+  
+  // Bulk save courses after admin reviews them
+  saveBulkCourses(courses: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/courses/bulk`, { courses });
+  }
 }

@@ -29,21 +29,21 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/admin', verifyToken, requireAdmin, adminRoutes);
 
 
-// Test Route: Phase 2 Milestone (GET /api/courses
-app.get('/api/users', async (req, res) => {
-    try {
-        // Query the database for the dummy course you inserted
-        const [rows] = await db.query('SELECT * FROM users');
+// // Test Route: Phase 2 Milestone (GET /api/courses
+// app.get('/api/users', async (req, res) => {
+//     try {
+//         // Query the database for the dummy course you inserted
+//         const [rows] = await db.query('SELECT * FROM users');
         
-        res.status(200).json({
-            success: true,
-            data: rows
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: "Database connection failed" });
-    }
-});
+//         res.status(200).json({
+//             success: true,
+//             data: rows
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: "Database connection failed" });
+//     }
+// });
 
 
 // Start Server

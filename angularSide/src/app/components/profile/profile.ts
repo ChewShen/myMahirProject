@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Data } from '../../services/data';
-import { Api } from '../../services/api';
+import { CoursesApi } from '../../services/courses-api';
 import { CommonModule, UpperCasePipe } from '@angular/common';
 
 @Component({
@@ -17,7 +17,7 @@ export class Profile {
   constructor (
     private data : Data,
     private cdr: ChangeDetectorRef,
-    private api: Api) {}
+    private api: CoursesApi) {}
 
     ngOnInit(){
       this.user = this.data.loadStorage('user_detail');

@@ -110,8 +110,8 @@ This viewpoint illustrates the system runtime layout after container orchestrati
    PORT=3000
    DB_HOST=localhost
    DB_USER=your_mysql_username
-   DB_PASS=your_mysql_password
-   DB_NAME=mymahir
+   DB_PASSWORD=your_mysql_password
+   DB_NAME=elearning-db
    JWT_SECRET=your_secret_key
    DEV_SECRET_KEY=your_secret_key
    GEMINI_API_KEY=your_google_gemini_key

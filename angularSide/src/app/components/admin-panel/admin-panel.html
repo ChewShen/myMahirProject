@@ -42,14 +42,42 @@
                    placeholder="What will students learn?">
           </div>
 
-          <div class="flex flex-col gap-2">
-            <label class="font-bold text-on-surface">Course Content (For AI Generation)</label>
-            <textarea formControlName="content" rows="8" 
-                      class="p-3 rounded-lg border border-outline bg-surface focus:border-primary outline-none"
-                      placeholder="Paste the massive context or syllabus here. The AI will use this to generate the quizzes."></textarea>
+          <!-- The Auto-Fill Upload Box -->
+          <div class="bg-primary/5 border border-primary/20 rounded-xl p-6 mt-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <h4 class="font-bold text-primary flex items-center gap-2">
+                  <span class="material-symbols-outlined">auto_awesome</span>
+                  Auto-fill with AI
+                </h4>
+                <p class="text-sm text-on-surface-variant mt-1">Upload a PDF or DOCX file to automatically generate the course content.</p>
+              </div>
+              
+              <div>
+                @if (isUploading) {
+                  <div class="flex items-center gap-2 text-primary font-bold animate-pulse">
+                    <span class="material-symbols-outlined animate-spin">sync</span>
+                    Processing...
+                  </div>
+                } @else {
+                  <label class="cursor-pointer bg-primary text-on-primary px-4 py-2 rounded-lg font-bold hover:opacity-90 inline-flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">upload</span>
+                    Upload File
+                    <input type="file" class="hidden" accept=".pdf,.docx" (change)="onFileSelected($event)">
+                  </label>
+                }
+              </div>
+            </div>
           </div>
 
-          <button type="submit" [disabled]="courseForm.invalid || isSubmitting"
+          <div class="flex flex-col gap-2 mt-2">
+            <label class="font-bold text-on-surface">Course Content (Markdown)</label>
+            <textarea formControlName="content" rows="12" 
+                      class="p-3 rounded-lg border border-outline bg-surface font-mono text-sm focus:border-primary outline-none"
+                      placeholder="Paste your content here, or upload a document above to auto-fill..."></textarea>
+          </div>
+
+          <button type="submit" [disabled]="courseForm.invalid || isSubmitting || isUploading"
                   class="mt-4 bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:opacity-90 disabled:opacity-50 transition-opacity">
             {{ isSubmitting ? 'Publishing...' : 'Publish Course' }}
           </button>
@@ -57,6 +85,7 @@
       </div>
     } 
     @else {
+      <!-- Keep your existing Student Scores table here exactly as it is -->
       @if (isLoading) {
         <div class="p-12 text-center text-on-surface-variant font-bold">
           Loading Student Data...
@@ -105,6 +134,7 @@
   </div>
 
   @if (!isCreating) {
+    <!-- Keep your existing Manage Active Courses table here exactly as it is -->
     <div class="mt-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
       <div class="p-6 border-b border-outline-variant">
         <h3 class="text-xl font-bold text-primary">Manage Active Courses</h3>
@@ -153,5 +183,4 @@
       </div>
     </div>
   }
-
 </div>

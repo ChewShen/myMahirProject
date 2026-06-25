@@ -63,7 +63,5 @@ Feature 2: Dynamic Learning Study Kits
 ### Phase 9: Automated Curriculum Parsing & Serverless Storage (V3 Stretch Goal)
 **Takes the structural burden off educators by building out an automated ingestion engine.**
 - [ ] Admin Document Upload Interface: Create a seamless drag-and-drop file upload zone in the Admin dashboard using FormData to accept raw PDFs and DOCX documents.
-- [ ] Multipart Form Processing Middleware: Implement multer on the Express application layer utilizing memoryStorage to handle multi-part payloads directly in RAM safely.
-- [ ] Serverless Object Storage Integration: Connect the Express upload buffer directly to Cloudflare R2 object storage utilizing the AWS S3-compatible SDK v3 client to securely host raw assets under the 10GB free tier.
 - [ ] Document Conversion Pipeline: Incorporate Microsoft markitdown (or a node-equivalent parser) to programmatically convert incoming documents into structured Markdown text.
 - [ ] Automated Instructional Chunking: Prompt Gemini to read the newly generated Markdown chapter, divide it into logically sized sub-modules, and save the individual chunks cleanly into the MySQL courses table.

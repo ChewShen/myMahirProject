@@ -3,13 +3,15 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { AdminApi } from '../../services/admin-api';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Ui } from '../../services/ui';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-panel',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule,FormsModule],
   templateUrl: './admin-panel.html',
   styleUrl: './admin-panel.css',
 })
+
 export class AdminPanel {
   allScores: any[] = [];
   allCourses : any[] = [];
@@ -17,8 +19,15 @@ export class AdminPanel {
   isLoading = true;
   isCreating = false;
 
+  currentView: 'scores' | 'create' | 'upload' = 'scores';
+
   courseForm: FormGroup;
   isSubmitting = false;
+
+
+  // --- Upload State ---
+  isUploading = false;
+  uploadStatusMessage = '';
 
   constructor(
     private api: AdminApi, 
@@ -139,5 +148,46 @@ export class AdminPanel {
     this.cdr.detectChanges();
   }
 
+  // --- Auto-Fill via Document Upload ---
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!validTypes.includes(file.type)) {
+      this.uiservice.openSnackBar('Invalid file type. Only PDF and DOCX are allowed.');
+      return;
+    }
+    this.isUploading = true;
+    this.uploadStatusMessage = 'AI is reading and formatting your document...';
+    this.cdr.detectChanges();
+    this.api.uploadCurriculum(file).subscribe({
+      next: (res) => {
+        this.isUploading = false;
+        this.uiservice.openSnackBar('Document parsed successfully!');
+        
+        // Auto-fill the form with Gemini's response!
+        // We take the first item from the array since we treat it as one course
+        if (res.data && res.data.length > 0) {
+          const generatedCourse = res.data[0];
+          this.courseForm.patchValue({
+            title: generatedCourse.title,
+            description: 'AI Generated Course',
+            content: generatedCourse.content
+          });
+        }
+        
+        // Reset the file input so they can upload again if needed
+        event.target.value = ''; 
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Upload error', err);
+        this.isUploading = false;
+        this.uiservice.openSnackBar('Failed to process document.');
+        event.target.value = '';
+        this.cdr.detectChanges();
+      }
+    });
+  }
   
 }
