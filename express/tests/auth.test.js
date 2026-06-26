@@ -1,36 +1,9 @@
 const request = require('supertest');
-
 jest.mock('uuid', () => ({ v4: () => 'fake-test-uuid-1234' }));
-
-jest.mock('markitdown-js', () => {
-  return {
-    default: class MockMarkitdown {
-      async convert() {
-        return { textContent: '# Mock Document Content' };
-      }
-    }
-  };
-});
-jest.mock('@google/generative-ai', () => {
-  return {
-    GoogleGenerativeAI: class {
-      getGenerativeModel() {
-        return {
-          generateContent: async () => ({
-            response: {
-              text: () => JSON.stringify([{ title: "Mock AI Course", content: "Mock parsed content" }])
-            }
-          })
-        };
-      }
-    }
-  };
-});
-
 const app = require('../app');
 const db = require('../config/db');
 
-describe('🔐 Authentication Flow Integration Testing', () => {
+describe('Authentication Flow Integration Testing', () => {
   // Generate a uniquely identifier per test run so it never duplicates fields
   const uniqueId = Date.now();
   const testUser = {
@@ -60,7 +33,7 @@ describe('🔐 Authentication Flow Integration Testing', () => {
   }
 });
 
-  describe('📦 POST /api/register', () => {
+  describe('POST /api/register', () => {
     it('should successfully register a brand new active student account', async () => {
       const res = await request(app)
         .post('/api/register') // Make sure this matches your app.js mounting path!
@@ -83,7 +56,7 @@ describe('🔐 Authentication Flow Integration Testing', () => {
     });
   });
 
-  describe('🔑 POST /api/login', () => {
+  describe('POST /api/login', () => {
     it('should successfully authenticate user and return a signed JSON Web Token (JWT)', async () => {
       const res = await request(app)
         .post('/api/login')
@@ -120,7 +93,7 @@ describe('🔐 Authentication Flow Integration Testing', () => {
     });
   });
 
-  describe('🛠️ POST /api/setup-admin', () => {
+  describe('POST /api/setup-admin', () => {
     it('should reject provisioning if the devKey parameter is missing or wrong', async () => {
       const res = await request(app)
         .post('/api/setup-admin')

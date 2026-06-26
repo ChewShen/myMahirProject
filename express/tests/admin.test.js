@@ -30,7 +30,7 @@ jest.mock('@google/generative-ai', () => {
 const app = require('../app');
 const db = require('../config/db');
 
-describe('🛠️ Admin Dashboard & CRUD Operations Integration Suite', () => {
+describe('Admin Dashboard & CRUD Operations Integration Suite', () => {
   let validAdminToken;
   let invalidStudentToken;
   const adminId = 7777;
@@ -77,7 +77,7 @@ describe('🛠️ Admin Dashboard & CRUD Operations Integration Suite', () => {
     }
   });
 
-  describe('🔒 Endpoint Authorization Layer Enforcement', () => {
+  describe('Endpoint Authorization Layer Enforcement', () => {
     it('GET /api/admin/scores -> should reject requests if authorization token header is absent', async () => {
       const res = await request(app).get('/api/admin/scores');
       expect(res.statusCode).toBe(403); // 🚨 This test might FAIL right now!
@@ -93,7 +93,7 @@ describe('🛠️ Admin Dashboard & CRUD Operations Integration Suite', () => {
     });
   });
 
-  describe('📝 Course Creation & Lifecycle (Admin Verified)', () => {
+  describe('Course Creation & Lifecycle (Admin Verified)', () => {
     it('POST /api/admin/courses -> should allow admin to publish a new active course option', async () => {
       // Temporarily use another ID or let your endpoint execute since it reads req.user.userId
       const res = await request(app)
@@ -110,7 +110,7 @@ describe('🛠️ Admin Dashboard & CRUD Operations Integration Suite', () => {
     });
   });
 
-  describe('🗑️ Cascade Deletions and Content Mutations', () => {
+  describe('Cascade Deletions and Content Mutations', () => {
     beforeEach(async () => {
       // Seed targetCourseId right before mutating routes run
       await db.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -145,7 +145,7 @@ describe('🛠️ Admin Dashboard & CRUD Operations Integration Suite', () => {
     });
   });
 
-  describe('📄 Automated Curriculum Parsing (V3 Feature)', () => {
+  describe('Automated Curriculum Parsing (V3 Feature)', () => {
     
     it('POST /api/admin/courses/upload -> should parse document and return AI structured courses', async () => {
       // Create a fake file in memory

@@ -3,25 +3,39 @@ const jwt = require('jsonwebtoken');
 
 jest.mock('uuid', () => ({ v4: () => 'fake-test-uuid-1234' }));
 
-jest.mock('markitdown-js', () => {
-  return {
-    default: class MockMarkitdown {
-      async convert() {
-        return { textContent: '# Mock Document Content' };
-      }
-    }
-  };
-});
 jest.mock('@google/generative-ai', () => {
   return {
     GoogleGenerativeAI: class {
       getGenerativeModel() {
         return {
-          generateContent: async () => ({
-            response: {
-              text: () => JSON.stringify([{ title: "Mock AI Course", content: "Mock parsed content" }])
+          // Now we check the prompt string to return the right mock format
+          generateContent: async (prompt) => {
+            const promptStr = String(prompt).toLowerCase();
+            
+            // If the prompt is for the study kit
+            if (promptStr.includes('study kit')) {
+              return {
+                response: {
+                  text: () => JSON.stringify({
+                    moduleSummaries: ["Mock summary point"],
+                    vocabulary: [{ term: "Mock Term", definition: "Mock definition" }],
+                    flashcards: [{ front: "Mock front", back: "Mock back" }]
+                  })
+                }
+              };
             }
-          })
+            
+            // Default to the Quiz structure for generate-quiz tests
+            return {
+              response: {
+                text: () => JSON.stringify([{
+                  question: "Mock Question?",
+                  options: ["A", "B", "C", "D"],
+                  correctAnswer: "A"
+                }])
+              }
+            };
+          }
         };
       }
     }
@@ -31,7 +45,7 @@ jest.mock('@google/generative-ai', () => {
 const app = require('../app'); 
 const db = require('../config/db');
 
-describe('🎓 Course & AI Tutor Workspace Integration Suite', () => {
+describe('Course & AI Tutor Workspace Integration Suite', () => {
   let validStudentToken;
   let testUserId = 1; // Fallback seed reference
 
@@ -85,7 +99,7 @@ describe('🎓 Course & AI Tutor Workspace Integration Suite', () => {
     });
   });
 
-  describe('📚 RESTful Database Routes', () => {
+  describe('RESTful Database Routes', () => {
     it('GET /api/courses -> should fetch all available rows inside table database', async () => {
       const res = await request(app)
         .get('/api/courses')
@@ -131,7 +145,7 @@ describe('🎓 Course & AI Tutor Workspace Integration Suite', () => {
     });
   });
 
-  describe('🤖 Deep AI Microservice Routes (Live Loop)', () => {
+  describe('Deep AI Microservice Routes (Live Loop)', () => {
     // Setting longer test timeouts because external AI lookups take time
     jest.setTimeout(15000); 
 

@@ -216,44 +216,49 @@ The backend incorporates a test-driven validation layer using **Jest** and **Sup
 
 ```
  PASS  tests/auth.test.js
- 🔐 Authentication Flow Integration Testing
-   POST /api/register
-     ✓ should successfully register a brand new active student account (170 ms)
-     ✓ should return 400 Bad Request when attempting to register a duplicate email (66 ms)
-   POST /api/login
-     ✓ should successfully authenticate user and return a signed JSON Web Token (JWT) (64 ms)
-     ✓ should drop request with 400 Bad Request if fields are blank (Upstream Guard Trigger) (9 ms)
-     ✓ should return 401 Unauthorized for incorrect passwords (59 ms)
-   POST /api/setup-admin
-     ✓ should reject provisioning if the devKey parameter is missing or wrong (7 ms)
+  Authentication Flow Integration Testing
+    POST /api/register
+      √ should successfully register a brand new active student account (150 ms)
+      √ should return 400 Bad Request when attempting to register a duplicate email (64 ms)
+    POST /api/login
+      √ should successfully authenticate user and return a signed JSON Web Token (JWT) (62 ms)
+      √ should drop request with 400 Bad Request if fields are blank (Upstream Guard Trigger) (7 ms)
+      √ should return 401 Unauthorized for incorrect passwords (59 ms)
+    POST /api/setup-admin
+      √ should reject provisioning if the devKey parameter is missing or wrong (6 ms)
 
  PASS  tests/course.test.js
  Course & AI Tutor Workspace Integration Suite
-   verifyToken Global Middleware Check
-     ✓ should block anonymous traffic with a 401/403 status if token header is absent (40 ms)
-   RESTful Database Routes
-     ✓ GET /api/courses -> should fetch all available rows inside table database (21 ms)
-     ✓ GET /api/courses/:id -> should successfully look up and return a unique course by ID (21 ms)
-     ✓ POST /api/courses/save-score -> should log student assessment results into schema (23 ms)
-     ✓ GET /api/courses/my-scores -> should parse SQL JOIN payload and return active records (23 ms)
-   Deep AI Microservice Routes (Live Loop)
-     ✓ POST /api/courses/generate-quiz -> should process context strings into valid structures (1795 ms)
-     ✓ POST /api/courses/study-kit/generate -> should parse 3-in-1 instructional content arrays (1829 ms)
+  verifyToken Global Middleware Check
+    √ should block anonymous traffic with a 401/403 status if token header is absent (30 ms)
+  RESTful Database Routes
+    √ GET /api/courses -> should fetch all available rows inside table database (15 ms)
+    √ GET /api/courses/:id -> should successfully look up and return a unique course by ID (10 ms)
+    √ POST /api/courses/save-score -> should log student assessment results into schema (20 ms)
+    √ GET /api/courses/my-scores -> should parse SQL JOIN payload and return active records (13 ms)
+  Deep AI Microservice Routes (Live Loop)
+    √ POST /api/courses/generate-quiz -> should process context strings into valid structures (11 ms)
+    √ POST /api/courses/study-kit/generate -> should parse 3-in-1 instructional content arrays (8 ms)
 
  PASS  tests/admin.test.js
  Admin Dashboard & CRUD Operations Integration Suite
-   Endpoint Authorization Layer Enforcement
-     ✓ GET /api/admin/scores -> should reject requests if authorization token header is absent (24 ms)
-     ✓ POST /api/admin/courses -> should block student access profiles with 403 Forbidden (11 ms)
-   Course Creation & Lifecycle (Admin Verified)
-     ✓ POST /api/admin/courses -> should allow admin to publish a new active course option (17 ms)
-   Cascade Deletions and Content Mutations
-     ✓ PUT /api/admin/courses/:id -> should successfully commit content column updates (26 ms)
-     ✓ DELETE /api/admin/courses/:id -> should execute cascading row deletion safely (35 ms)
+  Endpoint Authorization Layer Enforcement
+    √ GET /api/admin/scores -> should reject requests if authorization token header is absent (26 ms)
+    √ POST /api/admin/courses -> should block student access profiles with 403 Forbidden (10 ms)
+  Course Creation & Lifecycle (Admin Verified)
+    √ POST /api/admin/courses -> should allow admin to publish a new active course option (16 ms)
+  Cascade Deletions and Content Mutations
+    √ PUT /api/admin/courses/:id -> should successfully commit content column updates (26 ms)
+    √ DELETE /api/admin/courses/:id -> should execute cascading row deletion safely (34 ms)
+  Automated Curriculum Parsing (V3 Feature)
+    √ POST /api/admin/courses/upload -> should parse document and return AI structured courses (23 ms)
+    √ POST /api/admin/courses/bulk -> should successfully bulk insert approved courses (32 ms)
+    √ POST /api/admin/courses/upload -> should reject requests with no file attached (7 ms)
+
 
 Test Suites: 3 passed, 3 total
-Tests:       18 passed, 18 total
+Tests:       21 passed, 21 total
 Snapshots:   0 total
-Time:        6.644 s
-Ran all test suites sequentially.
+Time:        3.141 s
+Ran all test suites.
 ```
